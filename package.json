@@ -15,6 +15,9 @@
     "gendiff",
     "config-dif"
   ],
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
   "author": "Vlad Filiucov <vlad.filiucov@gmail.com",
   "license": "MIT",
   "bugs": {
