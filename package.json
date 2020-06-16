@@ -1,0 +1,36 @@
+{
+  "name": "frontend-project-lvl2",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "CLI tool for comparing config files",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:VladFiliucov/frontend-project-lvl2.git"
+  },
+  "keywords": [
+    "compare-configs",
+    "cli",
+    "cli-tool",
+    "gendiff",
+    "config-dif"
+  ],
+  "author": "Vlad Filiucov <vlad.filiucov@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/VladFiliucov/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/VladFiliucov/frontend-project-lvl2#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-config-prettier": "^6.11.0",
+    "prettier": "^2.0.5"
+  }
+}
