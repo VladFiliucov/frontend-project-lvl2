@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-console.log('Connected');
+import program from '../src/index.js';
+
+program.parse(process.argv);
