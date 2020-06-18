@@ -6,7 +6,7 @@
   "bin": {
     "gendiff": "./bin/gendiff.js"
   },
-  "main": "./src/index.js",
+  "main": "./index.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:VladFiliucov/frontend-project-lvl2.git"
