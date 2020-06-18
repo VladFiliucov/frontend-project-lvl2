@@ -1,5 +1,5 @@
 {
-  "name": "frontend-project-lvl2",
+  "name": "gendiff",
   "type": "module",
   "version": "1.0.0",
   "description": "CLI tool for comparing config files",
