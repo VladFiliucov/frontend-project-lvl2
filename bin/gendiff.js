@@ -3,7 +3,7 @@
 import commander from 'commander';
 import { readFileSync } from 'fs';
 import path from 'path';
-import gendiff from '../index.js';
+import gendiff from '../src/index.js';
 
 const { Command } = commander;
 
