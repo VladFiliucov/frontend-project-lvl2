@@ -9,6 +9,7 @@ beforeEach(() => {
     type: 'module',
     version: '1.0.0',
     description: 'CLI tool for comparing config files',
+    proxy: false,
   };
 
   afterConfig = {
@@ -16,6 +17,7 @@ beforeEach(() => {
     type: true,
     version: '1.0.0',
     description: 'CLI foo tool for comparing config files',
+    verbose: true,
   };
 });
 
@@ -29,6 +31,8 @@ describe('gendiff', () => {
     version: 1.0.0
   - description: CLI tool for comparing config files
   + description: CLI foo tool for comparing config files
+  - proxy: false
+  + verbose: true
 }`,
     );
   });
