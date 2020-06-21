@@ -20,7 +20,7 @@ program.arguments('<filepath1> <filepath2>').action((filepath1, filepath2) => {
   const firstFileData = JSON.parse(firstFileContent);
   const secondFileData = JSON.parse(secondFileContent);
 
-  gendiff(firstFileData, secondFileData);
+  console.log(gendiff(firstFileData, secondFileData));
 });
 
 program.parse(process.argv);
