@@ -3,8 +3,8 @@ name: CI
 on: push
 
 jobs:
-  run-linters:
-    name: Run linters
+  build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
