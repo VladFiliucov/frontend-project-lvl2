@@ -8,4 +8,4 @@ test:
 	npm test
 
 test-coverage:
-	test -- --coverage --coverageProvider=v8
+	test --coverage --coverageProvider=v8
