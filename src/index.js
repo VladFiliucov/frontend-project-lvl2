@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+import path from 'path';
 import _ from 'lodash';
 
 const formatter = {
@@ -6,7 +8,12 @@ const formatter = {
   keep: (key, value) => `    ${key}: ${value}`,
 };
 
-export default (beforeConfig, afterConfig) => {
+export default (filepath1, filepath2) => {
+  const firstFileContent = readFileSync(path.resolve(filepath1), 'utf8');
+  const secondFileContent = readFileSync(path.resolve(filepath2), 'utf8');
+  const beforeConfig = JSON.parse(firstFileContent);
+  const afterConfig = JSON.parse(secondFileContent);
+
   const result = ['{'];
 
   for (let [key, value] of Object.entries(beforeConfig)) {
