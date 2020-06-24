@@ -24,28 +24,11 @@ describe('gendiff', () => {
       }).toThrow('Unsupported format');
     });
   });
-  describe('in JSON format', () => {
+
+  describe.each(['json', 'yml', 'ini'])('in %s format', extension => {
     it('can generate diff for two objects', () => {
-      const beforeConfPath = path.join(process.cwd(), '__fixtures__', 'confBefore.json');
-      const afterConfPath = path.join(process.cwd(), '__fixtures__', 'confAfter.json');
-
-      expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedDiff);
-    });
-  });
-
-  describe('in YAML format', () => {
-    it('can generate diff for two objects', () => {
-      const beforeConfPath = path.join(process.cwd(), '__fixtures__', 'confBefore.yml');
-      const afterConfPath = path.join(process.cwd(), '__fixtures__', 'confAfter.yml');
-
-      expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedDiff);
-    });
-  });
-
-  describe('in INI format', () => {
-    it('can generate diff for two objects', () => {
-      const beforeConfPath = path.join(process.cwd(), '__fixtures__', 'confBefore.ini');
-      const afterConfPath = path.join(process.cwd(), '__fixtures__', 'confAfter.ini');
+      const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
+      const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);
 
       expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedDiff);
     });
