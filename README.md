@@ -13,3 +13,7 @@ JSON support:
 YAML support:
 
 [![asciicast](https://asciinema.org/a/5yeHN4PlmPlxbsnnciW4TvWrm.svg)](https://asciinema.org/a/5yeHN4PlmPlxbsnnciW4TvWrm?autoplay=1&theme=solarized-light)
+
+INI support:
+
+[![asciicast](https://asciinema.org/a/Yvufcn6ohIClfXTzzXQPqS1PS.svg)](https://asciinema.org/a/Yvufcn6ohIClfXTzzXQPqS1PS?autoplay=1&theme=solarized-light)
