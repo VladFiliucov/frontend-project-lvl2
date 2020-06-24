@@ -1,21 +1,12 @@
 import { readFileSync } from 'fs';
 import path from 'path';
-import yaml from 'js-yaml';
 import _ from 'lodash';
+import chooseFormatter from './parsers';
 
 const formatter = {
   add: (key, value) => `  + ${key}: ${value}`,
   remove: (key, value) => `  - ${key}: ${value}`,
   keep: (key, value) => `    ${key}: ${value}`,
-};
-
-const chooseFormatter = filePath => {
-  const format = path.extname(filePath);
-
-  if (format === '.json') return JSON.parse;
-  if (format === '.yml' || format === '.yaml') return yaml.safeLoad;
-
-  throw new Error('Unsupported format');
 };
 
 export default (filepath1, filepath2) => {
