@@ -12,11 +12,8 @@ const formatter = {
 const chooseFormatter = filePath => {
   const format = path.extname(filePath);
 
-  if (format === '.json') {
-    return JSON.parse;
-  } else if (format === '.yml' || format === '.yaml') {
-    return yaml.safeLoad;
-  }
+  if (format === '.json') return JSON.parse;
+  if (format === '.yml' || format === '.yaml') return yaml.safeLoad;
 
   throw new Error('Unsupported format');
 };
