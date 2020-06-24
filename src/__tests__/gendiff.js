@@ -29,7 +29,7 @@ describe('gendiff', () => {
   describe('in YAML format', () => {
     it('can generate diff for two objects', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', 'confBefore.yml');
-      const afterConfPath = path.join(process.cwd(), '__fixtures__', 'confAfter.yaml');
+      const afterConfPath = path.join(process.cwd(), '__fixtures__', 'confAfter.yml');
 
       expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedDiff);
     });
