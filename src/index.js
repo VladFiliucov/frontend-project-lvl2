@@ -16,7 +16,7 @@ export default (filepath1, filepath2) => {
 
   const result = ['{'];
 
-  for (let [key, value] of Object.entries(beforeConfig)) {
+  Object.entries(beforeConfig).forEach(([key, value]) => {
     const isSame = value === afterConfig[key];
 
     if (isSame) {
@@ -28,12 +28,11 @@ export default (filepath1, filepath2) => {
         result.push(formatter.add(key, afterConfig[key]));
       }
     }
-  }
+  });
   const addedKeys = _.difference(Object.keys(afterConfig), Object.keys(beforeConfig));
   addedKeys.forEach(key => result.push(formatter.add(key, afterConfig[key])));
   result.push('}');
-  const multilineDiff = result.join('\n')
+  const multilineDiff = result.join('\n');
 
-  return multilineDiff
+  return multilineDiff;
 };
-
