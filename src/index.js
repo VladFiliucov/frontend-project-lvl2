@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import _ from 'lodash';
-import chooseFormatter from './parsers.js';
+import chooseParser from './parsers.js';
 
 const formatter = {
   add: (key, value) => `  + ${key}: ${value}`,
@@ -10,8 +10,8 @@ const formatter = {
 };
 
 export default (filepath1, filepath2) => {
-  const firstFileParser = chooseFormatter(filepath1);
-  const secondFileParser = chooseFormatter(filepath2);
+  const firstFileParser = chooseParser(filepath1);
+  const secondFileParser = chooseParser(filepath2);
   const firstFileContent = readFileSync(path.resolve(filepath1), 'utf8');
   const secondFileContent = readFileSync(path.resolve(filepath2), 'utf8');
   const beforeConfig = firstFileParser(firstFileContent);
