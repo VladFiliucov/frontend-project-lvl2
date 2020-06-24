@@ -41,4 +41,13 @@ describe('gendiff', () => {
       expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedDiff);
     });
   });
+
+  describe('in INI format', () => {
+    it('can generate diff for two objects', () => {
+      const beforeConfPath = path.join(process.cwd(), '__fixtures__', 'confBefore.ini');
+      const afterConfPath = path.join(process.cwd(), '__fixtures__', 'confAfter.ini');
+
+      expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedDiff);
+    });
+  });
 });
