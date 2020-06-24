@@ -17,6 +17,8 @@ const chooseFormatter = filePath => {
   } else if (format === '.yml' || format === '.yaml') {
     return yaml.safeLoad;
   }
+
+  throw new Error('Unsupported format');
 };
 
 export default (filepath1, filepath2) => {

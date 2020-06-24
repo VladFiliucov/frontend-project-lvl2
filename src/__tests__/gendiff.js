@@ -17,6 +17,13 @@ beforeAll(() => {
 });
 
 describe('gendiff', () => {
+  describe('when unsupported format', () => {
+    it('throws Unsupported format error', () => {
+      expect(() => {
+        gendiff('foo.doc', 'bar.png');
+      }).toThrow('Unsupported format');
+    });
+  });
   describe('in JSON format', () => {
     it('can generate diff for two objects', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', 'confBefore.json');
