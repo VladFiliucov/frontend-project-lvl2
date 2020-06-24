@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import path from 'path';
+import yaml from 'js-yaml';
 import _ from 'lodash';
 
 const formatter = {
@@ -8,11 +9,23 @@ const formatter = {
   keep: (key, value) => `    ${key}: ${value}`,
 };
 
+const chooseFormatter = filePath => {
+  const format = path.extname(filePath);
+
+  if (format === '.json') {
+    return JSON.parse;
+  } else if (format === '.yml' || format === '.yaml') {
+    return yaml.safeLoad;
+  }
+};
+
 export default (filepath1, filepath2) => {
+  const firstFileParser = chooseFormatter(filepath1);
+  const secondFileParser = chooseFormatter(filepath2);
   const firstFileContent = readFileSync(path.resolve(filepath1), 'utf8');
   const secondFileContent = readFileSync(path.resolve(filepath2), 'utf8');
-  const beforeConfig = JSON.parse(firstFileContent);
-  const afterConfig = JSON.parse(secondFileContent);
+  const beforeConfig = firstFileParser(firstFileContent);
+  const afterConfig = secondFileParser(secondFileContent);
 
   const result = ['{'];
 
