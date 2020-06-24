@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import _ from 'lodash';
-import chooseFormatter from './parsers';
+import chooseFormatter from './parsers.js';
 
 const formatter = {
   add: (key, value) => `  + ${key}: ${value}`,

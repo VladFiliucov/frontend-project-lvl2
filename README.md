@@ -6,4 +6,10 @@
 
 Show difference between two config files:
 
+JSON support:
+
 [![asciicast](https://asciinema.org/a/iBIbLaQWo33WiSNAvLS3xxbvd.svg)](https://asciinema.org/a/iBIbLaQWo33WiSNAvLS3xxbvd?autoplay=1&theme=solarized-light)
+
+YAML support:
+
+[![asciicast](https://asciinema.org/a/5yeHN4PlmPlxbsnnciW4TvWrm.svg)](https://asciinema.org/a/5yeHN4PlmPlxbsnnciW4TvWrm?autoplay=1&theme=solarized-light)
