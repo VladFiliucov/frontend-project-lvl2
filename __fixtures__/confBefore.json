@@ -2,6 +2,12 @@
   "name": "gendiff",
   "type": "module",
   "version": "1.0.0",
+  "setting6": {
+    "key": "value"
+  },
   "description": "CLI tool for comparing config files",
-  "proxy": false
+  "proxy": false,
+  "nest": {
+    "type": "module"
+  }
 }

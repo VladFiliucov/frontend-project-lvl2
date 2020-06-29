@@ -2,6 +2,13 @@
   "name": "gendiff",
   "type": true,
   "version": "1.0.0",
+  "setting6": {
+    "key": "value",
+    "ops": "vops"
+  },
   "description": "CLI foo tool for comparing config files",
-  "verbose": true
+  "verbose": true,
+  "subset": {
+    "key": "value"
+  }
 }
