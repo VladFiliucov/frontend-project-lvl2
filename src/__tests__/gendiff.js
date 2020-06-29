@@ -9,10 +9,20 @@ beforeAll(() => {
   - type: module
   + type: true
     version: 1.0.0
+    setting6: {
+        key: value
+      + ops: vops
+    }
   - description: CLI tool for comparing config files
   + description: CLI foo tool for comparing config files
   - proxy: false
   + verbose: true
+  + subset: {
+        key: value
+    }
+  - nest: {
+        type: module
+    }
 }`;
 });
 
@@ -25,7 +35,8 @@ describe('gendiff', () => {
     });
   });
 
-  describe.each(['json', 'yml', 'ini'])('in %s format', extension => {
+  // describe.each(['json', 'yml', 'ini'])('in %s format', extension => {
+  describe.each(['json'])('in %s format', extension => {
     it('can generate diff for two objects', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
       const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);
