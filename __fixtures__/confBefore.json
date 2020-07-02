@@ -8,6 +8,14 @@
   "description": "CLI tool for comparing config files",
   "proxy": false,
   "nest": {
-    "type": "module"
+    "type": "module",
+    "moreNest": {
+      "name": "vlad"
+    }
+  },
+  "subset": {
+    "key": {
+      "foo": "bar"
+    }
   }
 }

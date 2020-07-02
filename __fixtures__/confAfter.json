@@ -9,6 +9,8 @@
   "description": "CLI foo tool for comparing config files",
   "verbose": true,
   "subset": {
-    "key": "value"
+    "key": {
+      "foo": "baz"
+    }
   }
 }
