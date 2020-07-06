@@ -17,6 +17,10 @@ const compare = (beforeConfig, afterConfig) => {
   ]
   const result = [];
 
+  const getPrimitiveModificationType = (beforePrimitive, afterPrimitive) => (
+    (beforePrimitive === afterPrimitive) ? 'keep' : 'add'
+  );
+
   const innerCompare = (nestedBefore, nestedAfter, nestingLevel = 0) => {
     const tempData = {};
 
@@ -25,16 +29,25 @@ const compare = (beforeConfig, afterConfig) => {
 
       switch (typeof value) {
         case 'object':
+          // TODO array, null and function are also objects.
           tempData.type = 'object';
           if (_.has(nestedAfter, key)) {
             tempData.data = innerCompare(nestedBefore[key], nestedAfter[key], nestingLevel + 1);
           } else {
-            tempData.data = 'AAAAAAAAAAA';
+            tempData.data = nestedBefore[key];
+            tempData.modification = 'remove';
+            tempData.depth = nestingLevel + 1;
           }
           break;
         default:
           tempData.type = 'primitive';
           tempData.data = value;
+          tempData.depth = nestingLevel;
+          // Next line breaks because nested object might not have path to required key
+          // That is where we might want to use lodash function that finds property on the object safely
+          // Еще следует подумать имеет ли смысл искть в детских объекта, если мы знаем что второго объекта нет вообще
+          // TODO START HERE
+          tempData.modification = getPrimitiveModificationType(nestedBefore[key], nestedAfter[key]);
       }
     });
 
