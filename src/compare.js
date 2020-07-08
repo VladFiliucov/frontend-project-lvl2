@@ -6,69 +6,74 @@ const formatter = {
   keep: (key, value, ofset = 4) => `${' '.repeat(ofset)}${key}: ${value}`,
 };
 
+const unfoldModifiedObject = (entry, nestingLevel) => {
+  const tempData = {};
+
+  Object.entries(entry).forEach(([key, value]) => {
+    tempData.keyName = key;
+
+    switch (typeof value) {
+      case 'object':
+        tempData.type = 'object';
+        tempData.modification = 'keep';
+        tempData.depth = nestingLevel;
+        tempData.data = unfoldModifiedObject(value, nestingLevel + 1);
+        break;
+      default:
+        tempData.type = 'primitive';
+        tempData.modification = 'keep';
+        tempData.data = value;
+        tempData.depth = nestingLevel;
+    }
+  })
+  return tempData;
+}
+
 const compare = (beforeConfig, afterConfig) => {
-  [
-    {keyName: 'bar', type: 'primitive', data: 'foo', depth: 0, path: 'bar', modification: 'add'},
-    {keyName: 'woot', type: 'primitive', data: 'eyye', depth: 0, path: 'woot', modification: 'remove'},
-    {keyName: 'window', type: 'primitive', data: 'eyye', depth: 0, path: 'window', modification: 'keep'},
-    {keyName: 'vlad', type: 'object', data: {
-      keyName: 'zoo', type: 'primitive', data: 'foo', depth: 1, path: 'vlad.zoo', modification: 'add'
-    }, depth: 1, path: 'vlad'}
-  ]
-  const result = [];
+  // {keyName: 'bar', type: 'primitive', data: 'foo', depth: 0, path: 'bar', modification: 'add'},
 
-  const getPrimitiveModificationType = (beforePrimitive, afterPrimitive) => (
-    (beforePrimitive === afterPrimitive) ? 'keep' : 'add'
-  );
-
-  const innerCompare = (nestedBefore, nestedAfter, nestingLevel = 0) => {
-    const tempData = {};
+  const innerCompare = (nestedBefore, nestedAfter, nestingLevel = 1, path = []) => {
+    const result = {};
+        console.log(nestedBefore);
+    // NESTED BEFORE may not be an object
+    // so we need to handle primitives outside of that forEach loop
 
     Object.entries(nestedBefore).forEach(([key, value]) => {
+      const tempData = {};
       tempData.keyName = key
+      tempData.path = path.concat(key);
 
       switch (typeof value) {
         case 'object':
           // TODO array, null and function are also objects.
           tempData.type = 'object';
           if (_.has(nestedAfter, key)) {
-            tempData.data = innerCompare(nestedBefore[key], nestedAfter[key], nestingLevel + 1);
+            tempData.modification = 'keep';
+            tempData.data = innerCompare(nestedBefore[key], nestedAfter[key], nestingLevel + 1, tempData.path);
           } else {
-            tempData.data = nestedBefore[key];
             tempData.modification = 'remove';
-            tempData.depth = nestingLevel + 1;
+            tempData.depth = nestingLevel;
+            tempData.data = unfoldModifiedObject(value, nestingLevel + 1);
           }
           break;
         default:
           tempData.type = 'primitive';
           tempData.data = value;
           tempData.depth = nestingLevel;
-          // Next line breaks because nested object might not have path to required key
-          // That is where we might want to use lodash function that finds property on the object safely
-          // Еще следует подумать имеет ли смысл искть в детских объекта, если мы знаем что второго объекта нет вообще
-          // TODO START HERE
-          tempData.modification = getPrimitiveModificationType(nestedBefore[key], nestedAfter[key]);
+          if (_.has(nestedAfter, key) && (value === nestedAfter[key])) {
+            tempData.modification = 'keep';
+          } else {
+            tempData.modification = 'add';
+          }
       }
+      _.set(result, [...tempData.path], tempData)
     });
-
-    return tempData;
+    return result;
+    // console.log(result);
   }
 
-  Object.entries(beforeConfig).forEach(([key, value]) => {
-    const temp = {key}
-
-    switch (typeof value) {
-      case 'object':
-        temp.type = 'object';
-        temp.data = innerCompare(value, afterConfig[key], 1);
-        break;
-      default:
-        // temp.type = 'primitive';
-    }
-
-    result.push(temp)
-  });
-  console.log("Temp", result);
+  const somet = innerCompare(beforeConfig, afterConfig);
+  // console.log(somet);
 }
 
 export default compare;
