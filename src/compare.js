@@ -7,10 +7,10 @@ const formatter = {
 };
 
 const unfoldModifiedObject = (entry, nestingLevel) => {
-  const result = [];
+  const tempData = {};
 
   Object.entries(entry).forEach(([key, value]) => {
-    const tempData = {};
+    console.log(entry);
     tempData.keyName = key;
 
     switch (typeof value) {
@@ -26,9 +26,8 @@ const unfoldModifiedObject = (entry, nestingLevel) => {
         tempData.data = value;
         tempData.depth = nestingLevel;
     }
-    result.push(tempData);
   })
-  return result.flatMap;
+  return tempData;
 }
 
 const compare = (beforeConfig, afterConfig) => {

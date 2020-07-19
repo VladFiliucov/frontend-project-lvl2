@@ -67,7 +67,7 @@ export default (filepath1, filepath2) => {
   const acc = [];
 
   const result = compare(beforeConfig, afterConfig);
-  result.forEach(e => console.log(e));
+  // result.forEach(e => console.log(e));
   return undefined;
   // Object.entries(beforeConfig).forEach(([key, value]) => {
   //   if (typeof value === 'object') {
