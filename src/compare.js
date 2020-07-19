@@ -17,7 +17,7 @@ const unfoldModifiedObject = (entry, nestingLevel) => {
         tempData.type = 'object';
         tempData.modification = 'keep';
         tempData.depth = nestingLevel;
-        tempData.data = unfoldModifiedObject(value, nestingLevel + 1);
+        tempData.children = unfoldModifiedObject(value, nestingLevel + 1);
         break;
       default:
         tempData.type = 'primitive';
@@ -30,28 +30,30 @@ const unfoldModifiedObject = (entry, nestingLevel) => {
 }
 
 const compare = (beforeConfig, afterConfig) => {
-  // {keyName: 'bar', type: 'primitive', data: 'foo', depth: 0, path: 'bar', modification: 'add'},
+  // {keyName: 'bar', type: 'primitive', data: 'foo', children: [], depth: 0, path: 'bar', modification: 'add'},
 
-  const innerCompare = (nestedBefore, nestedAfter, nestingLevel = 1, path = []) => {
-    const result = {};
-        console.log(nestedBefore);
+  const innerCompare = (nestedData, nestingLevel = 1) => {
+    const [nestedBefore, nestedAfter] = nestedData;
+    const result = []
+
     // NESTED BEFORE may not be an object
     // so we need to handle primitives outside of that forEach loop
 
     Object.entries(nestedBefore).forEach(([key, value]) => {
       const tempData = {};
       tempData.keyName = key
-      tempData.path = path.concat(key);
+      const modifiedEntry = {};
+      // tempData.path = path.concat(key);
 
       switch (typeof value) {
         case 'object':
-          // TODO array, null and function are also objects.
+          // TODO array, null and function are also type of object. Have to handle if they are supported
           tempData.type = 'object';
           if (_.has(nestedAfter, key)) {
             tempData.modification = 'keep';
-            tempData.data = innerCompare(nestedBefore[key], nestedAfter[key], nestingLevel + 1, tempData.path);
+            tempData.children = compare(value, nestedAfter.key);
           } else {
-            tempData.modification = 'remove';
+            tempData.modification = 'add';
             tempData.depth = nestingLevel;
             tempData.data = unfoldModifiedObject(value, nestingLevel + 1);
           }
@@ -62,18 +64,35 @@ const compare = (beforeConfig, afterConfig) => {
           tempData.depth = nestingLevel;
           if (_.has(nestedAfter, key) && (value === nestedAfter[key])) {
             tempData.modification = 'keep';
-          } else {
-            tempData.modification = 'add';
+          }
+          if (!_.has(nestedAfter, key)) {
+            tempData.modification = 'remove';
+          }
+          if (_.has(nestedAfter, key) && (value !== nestedAfter[key])) {
+            tempData.modification = 'remove';
+            modifiedEntry.keyName = key;
+            modifiedEntry.modification = 'add';
+            modifiedEntry.depth = nestingLevel;
+            if (typeof nestedAfter[key] === 'object') {
+              modifiedEntry.type = 'object';
+              modifiedEntry.children =unfoldModifiedObject(nestedAfter[key], nestingLevel + 1)
+            } else {
+              modifiedEntry.type = 'primitive';
+              modifiedEntry.data = nestedAfter[key];
+            }
           }
       }
-      _.set(result, [...tempData.path], tempData)
+      result.push(tempData);
+      if (modifiedEntry.keyName) {
+        result.push(modifiedEntry);
+      }
     });
     return result;
-    // console.log(result);
   }
 
-  const somet = innerCompare(beforeConfig, afterConfig);
-  // console.log(somet);
+  const somet = innerCompare([beforeConfig, afterConfig]);
+  // somet.flatMap(x => console.log(x))
+  return somet;
 }
 
 export default compare;

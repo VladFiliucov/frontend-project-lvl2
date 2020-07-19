@@ -66,30 +66,32 @@ export default (filepath1, filepath2) => {
 
   const acc = [];
 
-  Object.entries(beforeConfig).forEach(([key, value]) => {
-    compare(beforeConfig, afterConfig);
-    if (typeof value === 'object') {
-    //   if (_.has(afterConfig, key)) {
-    //     const foo = compareObjects(value, afterConfig[key])
-    //     acc.push(formatOutput(foo));
-    //   } else {
-    //     acc.push(formatter.remove(key, value));
-    //   }
-    }
-    const isSame = value === afterConfig[key];
+  const result = compare(beforeConfig, afterConfig);
+  result.forEach(e => console.log(e));
+  return undefined;
+  // Object.entries(beforeConfig).forEach(([key, value]) => {
+  //   if (typeof value === 'object') {
+  //   //   if (_.has(afterConfig, key)) {
+  //   //     const foo = compareObjects(value, afterConfig[key])
+  //   //     acc.push(formatOutput(foo));
+  //   //   } else {
+  //   //     acc.push(formatter.remove(key, value));
+  //   //   }
+  //   }
+  //   const isSame = value === afterConfig[key];
 
-    if (isSame) {
-      acc.push(formatter.keep(key, value));
-    } else {
-      acc.push(formatter.remove(key, value));
+  //   if (isSame) {
+  //     acc.push(formatter.keep(key, value));
+  //   } else {
+  //     acc.push(formatter.remove(key, value));
 
-      if (_.has(afterConfig, key)) {
-        acc.push(formatter.add(key, afterConfig[key]));
-      }
-    }
-  });
-  const addedKeys = _.difference(Object.keys(afterConfig), Object.keys(beforeConfig));
-  addedKeys.forEach(key => acc.push(formatter.add(key, afterConfig[key])));
+  //     if (_.has(afterConfig, key)) {
+  //       acc.push(formatter.add(key, afterConfig[key]));
+  //     }
+  //   }
+  // });
+  // const addedKeys = _.difference(Object.keys(afterConfig), Object.keys(beforeConfig));
+  // addedKeys.forEach(key => acc.push(formatter.add(key, afterConfig[key])));
 
-  return formatOutput(acc);
+  // return formatOutput(acc);
 };
