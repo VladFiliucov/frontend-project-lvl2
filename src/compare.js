@@ -87,6 +87,21 @@ const compare = (beforeConfig, afterConfig) => {
         result.push(modifiedEntry);
       }
     });
+    const addedKeys = _.difference(Object.keys(nestedAfter), Object.keys(nestedBefore));
+    addedKeys.forEach(key => {
+      if (typeof nestedAfter[key] === 'object') {
+        result.push(unfoldModifiedObject(nestedAfter[key], nestingLevel + 1));
+      } else {
+        result.push({
+          keyName: key,
+          modification: 'add',
+          data: nestedAfter[key],
+          depth: nestingLevel,
+          type: 'primitive',
+        })
+      }
+    });
+
     return result;
   }
 
