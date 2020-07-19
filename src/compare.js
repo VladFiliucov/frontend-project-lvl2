@@ -51,7 +51,7 @@ const compare = (beforeConfig, afterConfig) => {
           tempData.type = 'object';
           if (_.has(nestedAfter, key)) {
             tempData.modification = 'keep';
-            tempData.children = compare(value, nestedAfter.key);
+            tempData.children = compare(value, nestedAfter[key]);
           } else {
             tempData.modification = 'add';
             tempData.depth = nestingLevel;
