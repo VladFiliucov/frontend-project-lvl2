@@ -80,11 +80,12 @@ const compare = (beforeConfig, afterConfig) => {
         case 'object':
           // TODO array, null and function are also type of object. Have to handle if they are supported
           tempData.type = 'object';
+          tempData.depth = nestingLevel;
           if (_.has(nestedAfter, key)) {
             tempData.modification = 'keep';
-            tempData.children = compare(value, nestedAfter[key]);
+            tempData.children = innerCompare([value, nestedAfter[key]], nestingLevel + 1);
           } else {
-            tempData.modification = 'add';
+            tempData.modification = 'remove';
             tempData.depth = nestingLevel;
             // tempData.children = unfoldModifiedObject(value, nestingLevel + 1);
             tempData.children = Object.entries(value).map(childEntry =>
@@ -102,7 +103,7 @@ const compare = (beforeConfig, afterConfig) => {
           if (!_.has(nestedAfter, key)) {
             tempData.modification = 'remove';
           }
-          if (_.has(nestedAfter, key) && value !== nestedAfter[key]) {
+          if (_.has(nestedAfter, key) && (value !== nestedAfter[key])) {
             tempData.modification = 'remove';
             modifiedEntry.keyName = key;
             modifiedEntry.modification = 'add';
