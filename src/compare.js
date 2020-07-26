@@ -1,80 +1,42 @@
 import _ from 'lodash';
 
-const formatter = {
-  add: (key, value, ofset = 2) => `${' '.repeat(ofset)}+ ${key}: ${value}`,
-  remove: (key, value, ofset = 2) => `${' '.repeat(ofset)}- ${key}: ${value}`,
-  keep: (key, value, ofset = 4) => `${' '.repeat(ofset)}${key}: ${value}`,
-};
-
 const normalizeChildren = (entry, nestingLevel, modification) => {
-  const tempData = {};
+  const result = [];
 
-  Object.entries(entry).forEach(([key, value]) => {
-    tempData.keyName = key;
+  _.isPlainObject(entry) &&
+    Object.entries(entry).forEach(([key, value]) => {
+      // console.log([key, value]);
+      const tempData = {};
+      tempData.keyName = key;
 
-    switch (typeof value) {
-      case 'object':
-        tempData.type = 'object';
-        tempData.modification = modification;
-        tempData.depth = nestingLevel;
-        tempData.children = Object.entries(value).map(childEntry =>
-          normalizeChildren(childEntry, nestingLevel + 1, modification),
-        );
-        break;
-      default:
-        tempData.type = 'primitive';
-        tempData.modification = modification;
-        tempData.data = value;
-        tempData.depth = nestingLevel;
-    }
-  });
-  return tempData;
-};
+      switch (typeof value) {
+        case 'object':
+          tempData.type = 'object';
+          tempData.modification = modification;
+          tempData.depth = nestingLevel;
+          tempData.children = normalizeChildren(value, nestingLevel + 1, modification);
+          break;
+        default:
+          tempData.type = 'primitive';
+          tempData.modification = modification;
+          tempData.data = value;
+          tempData.depth = nestingLevel;
+      }
 
-const unfoldModifiedObject = (entry, nestingLevel) => {
-  // Object.entries(entry).map(([key, value]) => {
-  //   return normalizeChildren()
-  // })
-  const tempData = {};
-
-  Object.entries(entry).forEach(([key, value]) => {
-    // console.log(entry);
-    tempData.keyName = key;
-
-    switch (typeof value) {
-      case 'object':
-        tempData.type = 'object';
-        tempData.modification = 'keep';
-        tempData.depth = nestingLevel;
-        tempData.children = Object.entries(value).map(childEntry =>
-          normalizeChildren(childEntry, nestingLevel + 1, 'keep'),
-        );
-        break;
-      default:
-        tempData.type = 'primitive';
-        tempData.modification = 'keep';
-        tempData.data = value;
-        tempData.depth = nestingLevel;
-    }
-  });
-  return tempData;
+      result.push(tempData);
+    });
+  return result;
 };
 
 const compare = (beforeConfig, afterConfig) => {
-  // {keyName: 'bar', type: 'primitive', data: 'foo', children: [], depth: 0, path: 'bar', modification: 'add'},
-
   const innerCompare = (nestedData, nestingLevel = 1) => {
     const [nestedBefore, nestedAfter] = nestedData;
     const result = [];
-
-    // NESTED BEFORE may not be an object
-    // so we need to handle primitives outside of that forEach loop
 
     Object.entries(nestedBefore).forEach(([key, value]) => {
       const tempData = {};
       tempData.keyName = key;
       const modifiedEntry = {};
-      // tempData.path = path.concat(key);
 
       switch (typeof value) {
         case 'object':
@@ -87,10 +49,7 @@ const compare = (beforeConfig, afterConfig) => {
           } else {
             tempData.modification = 'remove';
             tempData.depth = nestingLevel;
-            // tempData.children = unfoldModifiedObject(value, nestingLevel + 1);
-            tempData.children = Object.entries(value).map(childEntry =>
-              normalizeChildren(childEntry, nestingLevel + 1, 'keep'),
-            );
+            tempData.children = normalizeChildren(value, nestingLevel + 1, 'keep');
           }
           break;
         default:
@@ -103,6 +62,7 @@ const compare = (beforeConfig, afterConfig) => {
           if (!_.has(nestedAfter, key)) {
             tempData.modification = 'remove';
           }
+          // TODO can't compare objects this way. Use lodash instead
           if (_.has(nestedAfter, key) && value !== nestedAfter[key]) {
             tempData.modification = 'remove';
             modifiedEntry.keyName = key;
@@ -110,7 +70,12 @@ const compare = (beforeConfig, afterConfig) => {
             modifiedEntry.depth = nestingLevel;
             if (typeof nestedAfter[key] === 'object') {
               modifiedEntry.type = 'object';
-              modifiedEntry.children = unfoldModifiedObject(nestedAfter[key], nestingLevel + 1);
+              // TODO Bug in next line
+              modifiedEntry.children = normalizeChildren(
+                nestedAfter[key],
+                nestingLevel + 1,
+                'keep',
+              );
             } else {
               modifiedEntry.type = 'primitive';
               modifiedEntry.data = nestedAfter[key];
@@ -130,9 +95,7 @@ const compare = (beforeConfig, afterConfig) => {
           modification: 'add',
           depth: nestingLevel,
           type: 'object',
-          children: Object.entries(nestedAfter[key]).map(childEntry =>
-            normalizeChildren(childEntry, nestingLevel + 1, 'keep'),
-          ),
+          children: normalizeChildren(nestedAfter[key], nestingLevel + 1, 'keep'),
         });
       } else {
         result.push({

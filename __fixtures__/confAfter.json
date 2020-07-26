@@ -13,7 +13,13 @@
       "foo": "baz"
     }
   },
-  "newObject": {
+  "simple": {
+    "made_easy": true,
+    "and": {
+      "even": "easier"
+    }
+  },
+  "new_object": {
     "name": "zara home",
     "address": {
       "street": "four dials",

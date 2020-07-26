@@ -68,10 +68,10 @@ export default (filepath1, filepath2) => {
 
   const result = compare(beforeConfig, afterConfig);
   result.forEach(e => {
-    console.log(e)
-    // if (e.children) {
-    //   e.children.forEach(c => console.log("CILD", c))
-    // }
+    // console.log(e)
+    if (e.children) {
+      e.children.forEach(c => console.log("CILD", c))
+    }
   });
   return undefined;
   // Object.entries(beforeConfig).forEach(([key, value]) => {

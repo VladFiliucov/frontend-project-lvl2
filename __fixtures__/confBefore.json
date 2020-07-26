@@ -13,6 +13,7 @@
       "name": "vlad"
     }
   },
+  "simple": true,
   "subset": {
     "key": {
       "foo": "bar"
