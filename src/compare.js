@@ -103,7 +103,7 @@ const compare = (beforeConfig, afterConfig) => {
           if (!_.has(nestedAfter, key)) {
             tempData.modification = 'remove';
           }
-          if (_.has(nestedAfter, key) && (value !== nestedAfter[key])) {
+          if (_.has(nestedAfter, key) && value !== nestedAfter[key]) {
             tempData.modification = 'remove';
             modifiedEntry.keyName = key;
             modifiedEntry.modification = 'add';
@@ -125,7 +125,15 @@ const compare = (beforeConfig, afterConfig) => {
     const addedKeys = _.difference(Object.keys(nestedAfter), Object.keys(nestedBefore));
     addedKeys.forEach(key => {
       if (typeof nestedAfter[key] === 'object') {
-        result.push(unfoldModifiedObject(nestedAfter[key], nestingLevel + 1));
+        result.push({
+          keyName: key,
+          modification: 'add',
+          depth: nestingLevel,
+          type: 'object',
+          children: Object.entries(nestedAfter[key]).map(childEntry =>
+            normalizeChildren(childEntry, nestingLevel + 1, 'keep'),
+          ),
+        });
       } else {
         result.push({
           keyName: key,
