@@ -111,9 +111,7 @@ const compare = (beforeConfig, afterConfig) => {
     return result;
   };
 
-  const somet = innerCompare([beforeConfig, afterConfig]);
-  // somet.flatMap(x => console.log(x))
-  return somet;
+  return innerCompare([beforeConfig, afterConfig]);
 };
 
 export default compare;

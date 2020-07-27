@@ -3,14 +3,9 @@ import path from 'path';
 import _ from 'lodash';
 import compare from './compare.js';
 import chooseParser from './parsers.js';
+import stylish from './formatters.js';
 
 const BASE_OFFSET = 2;
-
-const formatter = {
-  add: (key, value, ofset = 2) => `${' '.repeat(ofset)}+ ${key}: ${value}`,
-  remove: (key, value, ofset = 2) => `${' '.repeat(ofset)}- ${key}: ${value}`,
-  keep: (key, value, ofset = 4) => `${' '.repeat(ofset)}${key}: ${value}`,
-};
 
 const formatOutput = (entries, nestingLevel = 0) => {
   const start = `${' '.repeat(nestingLevel)}{`;
@@ -67,13 +62,13 @@ export default (filepath1, filepath2) => {
   const acc = [];
 
   const result = compare(beforeConfig, afterConfig);
-  result.forEach(e => {
-    // console.log(e)
-    if (e.children) {
-      e.children.forEach(c => console.log("CILD", c))
-    }
-  });
-  return undefined;
+  // result.forEach(e => {
+  //   // console.log(e)
+  //   if (e.children) {
+  //     e.children.forEach(c => console.log("CILD", c))
+  //   }
+  // });
+  return stylish(result);
   // Object.entries(beforeConfig).forEach(([key, value]) => {
   //   if (typeof value === 'object') {
   //   //   if (_.has(afterConfig, key)) {
