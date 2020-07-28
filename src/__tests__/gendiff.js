@@ -16,13 +16,33 @@ beforeAll(() => {
   - description: CLI tool for comparing config files
   + description: CLI foo tool for comparing config files
   - proxy: false
-  + verbose: true
-  + subset: {
-        key: value
-    }
   - nest: {
         type: module
+        moreNest: {
+            name: vlad
+        }
     }
+  - simple: true
+  + simple: {
+        made_easy: true
+        and: {
+            even: easier
+        }
+    }
+    subset: {
+        key: {
+          - foo: bar
+          + foo: baz
+        }
+    }
+  + verbose: true
+  + new_object: {
+        name: zara home
+        address: {
+            street: four dials
+            postcode: E20
+        }
+  }
 }`;
 });
 
