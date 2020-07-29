@@ -42,7 +42,7 @@ beforeAll(() => {
             street: four dials
             postcode: E20
         }
-  }
+    }
 }`;
 });
 
