@@ -5,7 +5,6 @@ const normalizeChildren = (entry, nestingLevel, modification) => {
 
   _.isPlainObject(entry) &&
     Object.entries(entry).forEach(([key, value]) => {
-      // console.log([key, value]);
       const tempData = {};
       tempData.keyName = key;
 
@@ -70,7 +69,6 @@ const compare = (beforeConfig, afterConfig) => {
             modifiedEntry.depth = nestingLevel;
             if (typeof nestedAfter[key] === 'object') {
               modifiedEntry.type = 'object';
-              // TODO Bug in next line
               modifiedEntry.children = normalizeChildren(
                 nestedAfter[key],
                 nestingLevel + 1,
@@ -87,6 +85,7 @@ const compare = (beforeConfig, afterConfig) => {
         result.push(modifiedEntry);
       }
     });
+
     const addedKeys = _.difference(Object.keys(nestedAfter), Object.keys(nestedBefore));
     addedKeys.forEach(key => {
       if (typeof nestedAfter[key] === 'object') {

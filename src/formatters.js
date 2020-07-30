@@ -18,7 +18,6 @@ const stylish = diffEntries => {
 
     const keyWithModification =
       nestedKeyModification && `${modifications[nestedKeyModification].concat(nestedKeyName)}`;
-    console.log(nestedKeyName, nestingLevel);
 
     const start = nestedKeyName
       ? `${' '.repeat(nestingLevel - 2).concat(keyWithModification)}: {`
