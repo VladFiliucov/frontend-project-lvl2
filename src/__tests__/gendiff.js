@@ -55,9 +55,10 @@ describe('gendiff', () => {
     });
   });
 
-  describe.each(['json', 'yml'])('in %s format', extension => {
-  // describe.each(['json', 'yml', 'ini'])('in %s format', extension => {
-  // describe.each(['json'])('in %s format', extension => {
+  // В формате ini не получилось использовать в перемешку корневые и вложенные свойства.
+  // Как вариант - могу написать отдельную спеку для этого формата - что-бы выделить то, что
+  // он работает иначе.
+  describe.each(['json', 'yml' /* , 'ini' */])('in %s format', extension => {
     it('can generate diff for two objects', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
       const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);
