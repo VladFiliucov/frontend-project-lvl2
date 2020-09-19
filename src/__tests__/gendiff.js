@@ -55,8 +55,9 @@ describe('gendiff', () => {
     });
   });
 
+  describe.each(['json', 'yml'])('in %s format', extension => {
   // describe.each(['json', 'yml', 'ini'])('in %s format', extension => {
-  describe.each(['json'])('in %s format', extension => {
+  // describe.each(['json'])('in %s format', extension => {
     it('can generate diff for two objects', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
       const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);

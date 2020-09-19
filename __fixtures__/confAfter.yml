@@ -1,5 +1,20 @@
 name: gendiff
 type: true
 version: 1.0.0
+setting6:
+  key: value
+  ops: vops
 description: CLI foo tool for comparing config files
 verbose: true
+subset:
+  key:
+    foo: baz
+simple:
+  made_easy: true
+  and:
+    even: easier
+new_object:
+  name: zara home
+  address:
+    street: four dials
+    postcode: E20

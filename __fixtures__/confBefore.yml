@@ -1,5 +1,15 @@
 name: gendiff
 type: module
 version: 1.0.0
+setting6:
+  key: value
 description: CLI tool for comparing config files
 proxy: false
+nest:
+  type: module
+  moreNest:
+    name: vlad
+simple: true
+subset:
+  key:
+    foo: bar
