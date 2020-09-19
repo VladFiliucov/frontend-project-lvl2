@@ -3,7 +3,7 @@ import _ from 'lodash';
 const normalizeChildren = (entry, nestingLevel, modification) => {
   const result = [];
 
-  _.isPlainObject(entry) &&
+  if (_.isPlainObject(entry)) {
     Object.entries(entry).forEach(([key, value]) => {
       const tempData = {};
       tempData.keyName = key;
@@ -24,6 +24,7 @@ const normalizeChildren = (entry, nestingLevel, modification) => {
 
       result.push(tempData);
     });
+  }
   return result;
 };
 
@@ -39,7 +40,7 @@ const compare = (beforeConfig, afterConfig) => {
 
       switch (typeof value) {
         case 'object':
-          // TODO array, null and function are also type of object. Have to handle if they are supported
+          // TODO array, null and function are also type of object. Have to handle if they are supported in requirements
           tempData.type = 'object';
           tempData.depth = nestingLevel;
           if (_.has(nestedAfter, key)) {
@@ -61,7 +62,6 @@ const compare = (beforeConfig, afterConfig) => {
           if (!_.has(nestedAfter, key)) {
             tempData.modification = 'remove';
           }
-          // TODO can't compare objects this way. Use lodash instead
           if (_.has(nestedAfter, key) && value !== nestedAfter[key]) {
             tempData.modification = 'remove';
             modifiedEntry.keyName = key;
