@@ -1,4 +1,5 @@
-const BASE_OFFSET = 4;
+const BASE_INDENTATION = 4;
+const SPACE_FOR_OPERATORS = 2;
 
 const modifications = {
   add: '+ ',
@@ -9,23 +10,29 @@ const modifications = {
 const stylish = diffEntries => {
   const formatOutput = (entries, nestingLevel = 0, nestedKeyName, nestedKeyModification) => {
     const formatter = {
-      add: (key, value, offset = 2) =>
-        `${' '.repeat(2 * offset + (nestedKeyModification ? 2 : 0))}+ ${key}: ${value}`,
-      remove: (key, value, offset = 2) =>
-        `${' '.repeat(2 * offset + (nestedKeyModification ? 2 : 0))}- ${key}: ${value}`,
-      keep: (key, value, offset = 4) => `${' '.repeat(4 * offset)}${key}: ${value}`,
+      add: (key, value, nestingDepth) =>
+        `${' '.repeat(BASE_INDENTATION * nestingDepth - SPACE_FOR_OPERATORS)}+ ${key}: ${value}`,
+      remove: (key, value, nestingDepth) =>
+        `${' '.repeat(BASE_INDENTATION * nestingDepth - SPACE_FOR_OPERATORS)}- ${key}: ${value}`,
+      keep: (key, value, nestingDepth) =>
+        `${' '.repeat(BASE_INDENTATION * nestingDepth)}${key}: ${value}`,
     };
 
     const keyWithModification =
       nestedKeyModification && `${modifications[nestedKeyModification].concat(nestedKeyName)}`;
 
     const start = nestedKeyName
-      ? `${' '.repeat(nestingLevel - 2).concat(keyWithModification)}: {`
+      ? `${' '.repeat(nestingLevel - SPACE_FOR_OPERATORS).concat(keyWithModification)}: {`
       : `${' '.repeat(nestingLevel)}{`;
     const end = `${' '.repeat(nestingLevel)}}`;
     const indentedEntries = entries.map(entry => {
       const entryContent = Array.isArray(entry.children)
-        ? formatOutput(entry.children, entry.depth * BASE_OFFSET, entry.keyName, entry.modification)
+        ? formatOutput(
+            entry.children,
+            entry.depth * BASE_INDENTATION,
+            entry.keyName,
+            entry.modification,
+          )
         : formatter[entry.modification](entry.keyName, entry.data, entry.depth);
 
       return entryContent;
