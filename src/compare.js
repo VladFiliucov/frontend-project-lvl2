@@ -1,19 +1,20 @@
 import _ from 'lodash';
 
-const normalizeChildren = (entry, nestingLevel, modification) => {
+const normalizeChildren = (entry, nestingLevel, modification, pathToProperty) => {
   const result = [];
 
   if (_.isPlainObject(entry)) {
     Object.entries(entry).forEach(([key, value]) => {
       const tempData = {};
       tempData.keyName = key;
+      tempData.path = `${pathToProperty}.${key}`;
 
       switch (typeof value) {
         case 'object':
           tempData.type = 'object';
           tempData.modification = modification;
           tempData.depth = nestingLevel;
-          tempData.children = normalizeChildren(value, nestingLevel + 1, modification);
+          tempData.children = normalizeChildren(value, nestingLevel + 1, modification, tempData.path);
           break;
         default:
           tempData.type = 'primitive';
@@ -29,13 +30,15 @@ const normalizeChildren = (entry, nestingLevel, modification) => {
 };
 
 const compare = (beforeConfig, afterConfig) => {
-  const innerCompare = (nestedData, nestingLevel = 1) => {
+  const innerCompare = (nestedData, nestingLevel = 1, pathToProperty = '') => {
     const [nestedBefore, nestedAfter] = nestedData;
     const result = [];
 
     Object.entries(nestedBefore).forEach(([key, value]) => {
       const tempData = {};
       tempData.keyName = key;
+      const extendedPath = pathToProperty === '' ? key : `.${key}`;
+      tempData.path = `${pathToProperty}${extendedPath}`;
       const modifiedEntry = {};
 
       switch (typeof value) {
@@ -45,11 +48,15 @@ const compare = (beforeConfig, afterConfig) => {
           tempData.depth = nestingLevel;
           if (_.has(nestedAfter, key)) {
             tempData.modification = 'keep';
-            tempData.children = innerCompare([value, nestedAfter[key]], nestingLevel + 1);
+            tempData.children = innerCompare(
+              [value, nestedAfter[key]],
+              nestingLevel + 1,
+              tempData.path,
+            );
           } else {
             tempData.modification = 'remove';
             tempData.depth = nestingLevel;
-            tempData.children = normalizeChildren(value, nestingLevel + 1, 'keep');
+            tempData.children = normalizeChildren(value, nestingLevel + 1, 'keep', tempData.path);
           }
           break;
         default:
@@ -67,12 +74,14 @@ const compare = (beforeConfig, afterConfig) => {
             modifiedEntry.keyName = key;
             modifiedEntry.modification = 'add';
             modifiedEntry.depth = nestingLevel;
+            modifiedEntry.path = tempData.path;
             if (typeof nestedAfter[key] === 'object') {
               modifiedEntry.type = 'object';
               modifiedEntry.children = normalizeChildren(
                 nestedAfter[key],
                 nestingLevel + 1,
                 'keep',
+                tempData.path,
               );
             } else {
               modifiedEntry.type = 'primitive';
@@ -93,12 +102,14 @@ const compare = (beforeConfig, afterConfig) => {
           keyName: key,
           modification: 'add',
           depth: nestingLevel,
+          path: key,
           type: 'object',
-          children: normalizeChildren(nestedAfter[key], nestingLevel + 1, 'keep'),
+          children: normalizeChildren(nestedAfter[key], nestingLevel + 1, 'keep', key),
         });
       } else {
         result.push({
           keyName: key,
+          path: key,
           modification: 'add',
           data: nestedAfter[key],
           depth: nestingLevel,
