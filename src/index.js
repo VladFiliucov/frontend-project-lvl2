@@ -2,9 +2,9 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import compare from './compare.js';
 import chooseParser from './parsers.js';
-import stylish from './formatters.js';
+import formatter from './formatters.js';
 
-export default (filepath1, filepath2) => {
+export default (filepath1, filepath2, format = 'stylish') => {
   const firstFileParser = chooseParser(filepath1);
   const secondFileParser = chooseParser(filepath2);
   const firstFileContent = readFileSync(path.resolve(filepath1), 'utf8');
@@ -14,5 +14,5 @@ export default (filepath1, filepath2) => {
 
   const result = compare(beforeConfig, afterConfig);
 
-  return stylish(result);
+  return formatter(format)(result);
 };
