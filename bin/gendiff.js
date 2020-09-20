@@ -12,7 +12,7 @@ program.description('Compares two configuration files and shows the difference.'
 program.helpOption('-h, --help', 'output usage information');
 program.option('-f, --format [type]', 'output format');
 program.arguments('<filepath1> <filepath2>').action((filepath1, filepath2) => {
-  console.log(gendiff(filepath1, filepath2));
+  console.log(gendiff(filepath1, filepath2, program.format));
 });
 
 program.parse(process.argv);
