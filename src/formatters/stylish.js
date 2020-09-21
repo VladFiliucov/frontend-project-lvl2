@@ -46,11 +46,4 @@ const stylish = diffEntries => {
   return formatOutput(diffEntries);
 };
 
-export default format => {
-  switch (format) {
-    case 'stylish':
-      return stylish;
-    default:
-      throw new Error('only supported output format is stylish');
-  }
-};
+export default stylish;
