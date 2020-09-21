@@ -46,7 +46,17 @@ beforeAll(() => {
     }
 }`;
 
-const formattedPlainDiff = ``;
+  formattedPlainDiff = `
+    Property 'type' was updated. From 'module' to true
+    Property 'setting6.ops' was added with value: 'vops'
+    Property 'description' was updated. From 'CLI tool for comparing config files' to 'CLI foo tool for comparing config files'
+    Property 'proxy' was removed
+    Property 'next' was removed
+    Property 'simple' was updated. From true to [complex value]
+    Property 'subset.key.foo' was updated. From 'bar' to 'baz'
+    Property 'verbose' was added with value: true
+    Property 'new_object' was added with value: [complex value]
+  `;
 });
 
 describe('gendiff', () => {
@@ -69,11 +79,11 @@ describe('gendiff', () => {
       expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedStylishDiff);
     });
 
-    it.skip('can generate diff for two objects in plain format', () => {
+    it('can generate diff for two objects in plain format', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
       const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);
 
-      expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedPlainDiff);
+      expect(gendiff(beforeConfPath, afterConfPath, 'plain')).toBe(formattedPlainDiff);
     });
   });
 });
