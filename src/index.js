@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import compare from './compare.js';
 import chooseParser from './parsers.js';
-import formatter from './formatters.js';
+import formatter from './formatters/index.js';
 
 export default (filepath1, filepath2, format = 'stylish') => {
   const firstFileParser = chooseParser(filepath1);
