@@ -1,10 +1,11 @@
 import path from 'path';
 import gendiff from '../index.js';
 
-let formattedDiff;
+let formattedStylishDiff;
+let formattedPlainDiff;
 
 beforeAll(() => {
-  formattedDiff = `{
+  formattedStylishDiff = `{
     name: gendiff
   - type: module
   + type: true
@@ -44,6 +45,8 @@ beforeAll(() => {
         }
     }
 }`;
+
+const formattedPlainDiff = ``;
 });
 
 describe('gendiff', () => {
@@ -59,11 +62,18 @@ describe('gendiff', () => {
   // Как вариант - могу написать отдельную спеку для этого формата - что-бы выделить то, что
   // он работает иначе.
   describe.each(['json', 'yml' /* , 'ini' */])('in %s format', extension => {
-    it('can generate diff for two objects', () => {
+    it('can generate diff for two objects in stylish format', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
       const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);
 
-      expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedDiff);
+      expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedStylishDiff);
+    });
+
+    it.skip('can generate diff for two objects in plain format', () => {
+      const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
+      const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);
+
+      expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedPlainDiff);
     });
   });
 });
