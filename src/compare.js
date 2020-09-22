@@ -102,13 +102,15 @@ const compare = (beforeConfig, afterConfig) => {
           keyName: key,
           modification: 'add',
           depth: nestingLevel,
+          // BUG HERE
           path: key,
           type: 'object',
-          children: normalizeChildren(nestedAfter[key], nestingLevel + 1, 'keep', key),
+          children: normalizeChildren(nestedAfter[key], nestingLevel + 1, 'keep', key /* OR HERE */),
         });
       } else {
         result.push({
           keyName: key,
+          // BUG HERE
           path: key,
           modification: 'add',
           data: nestedAfter[key],

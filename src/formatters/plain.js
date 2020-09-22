@@ -30,12 +30,16 @@ const plain = diffEntries => {
     const prev = diffEntries[index - 1];
     const current = entry;
     const next = diffEntries[index + 1];
-    // TODO think about next line logic
-    // TODO need to iterate over children as well
+
     if (prev && current.path === prev.path) return;
 
     const changelog = getChangelog(current, next);
 
+    if (current.keyName === 'ops') {
+      console.log("Prev", prev);
+      console.log("Current", current);
+      console.log("Next", next);
+    }
     if (changelog) formattedEntries.push(`Property '${current.path}' was ${changelog}`);
 
     if (current.children) {
