@@ -1,12 +1,23 @@
+import _ from 'lodash';
+
+const dataFormatter = data => {
+  if (typeof data === 'string') return `'${data}'`;
+  if (typeof data === 'boolean') return data;
+  if (Array.isArray(data)) return '[complex value]';
+}
+
 const getChangelog = (current, next) => {
   if (current.modification === 'keep') return;
 
   if (typeof next === 'undefined') return 'last one';
 
+  const currentData = current.data || current.children;
+  const nextData = next.data || next.children;
+
   if (current.path === next.path) {
-    return 'updated from something to something';
+    return `updated. From ${dataFormatter(currentData)} to ${dataFormatter(nextData)}`;
   } else if (current.modification === 'add') {
-    return 'added';
+    return `added with value: ${dataFormatter(currentData)}`;
   } else {
     return 'removed';
   }
@@ -26,6 +37,10 @@ const plain = diffEntries => {
     const changelog = getChangelog(current, next);
 
     if (changelog) formattedEntries.push(`Property '${current.path}' was ${changelog}`);
+
+    if (current.children) {
+      formattedEntries.push(plain(current.children));
+    }
   });
 
   const multilineDiff = formattedEntries.join('\n');
