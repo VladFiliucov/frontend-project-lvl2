@@ -1,11 +1,11 @@
-const getChangelog = (entry, next) => {
-  if (entry.modification === 'keep') return;
+const getChangelog = (current, next) => {
+  if (current.modification === 'keep') return;
 
   if (typeof next === 'undefined') return 'last one';
 
-  if (entry.keyName === next.keyName) {
+  if (current.path === next.path) {
     return 'updated from something to something';
-  } else if (entry.modification === 'add') {
+  } else if (current.modification === 'add') {
     return 'added';
   } else {
     return 'removed';
@@ -17,12 +17,15 @@ const plain = diffEntries => {
 
   diffEntries.forEach((entry, index) => {
     const prev = diffEntries[index - 1];
+    const current = entry;
+    const next = diffEntries[index + 1];
     // TODO think about next line logic
-    if (prev && entry.keyName === prev.keyName) return;
+    // TODO need to iterate over children as well
+    if (prev && current.path === prev.path) return;
 
-    const changelog = getChangelog(entry, diffEntries[index + 1]);
+    const changelog = getChangelog(current, next);
 
-    if (changelog) formattedEntries.push(`Property '${entry.keyName}' was ${changelog}`);
+    if (changelog) formattedEntries.push(`Property '${current.path}' was ${changelog}`);
   });
 
   const multilineDiff = formattedEntries.join('\n');
