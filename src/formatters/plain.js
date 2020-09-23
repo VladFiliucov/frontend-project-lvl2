@@ -35,11 +35,6 @@ const plain = diffEntries => {
 
     const changelog = getChangelog(current, next);
 
-    if (current.keyName === 'ops') {
-      console.log("Prev", prev);
-      console.log("Current", current);
-      console.log("Next", next);
-    }
     if (changelog) formattedEntries.push(`Property '${current.path}' was ${changelog}`);
 
     if (current.children) {
