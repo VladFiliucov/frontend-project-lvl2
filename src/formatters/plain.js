@@ -9,9 +9,16 @@ const dataFormatter = data => {
 const getChangelog = (current, next) => {
   if (current.modification === 'keep') return;
 
-  if (typeof next === 'undefined') return 'last one';
-
   const currentData = current.data || current.children;
+
+  if (typeof next === 'undefined') {
+    if (current.modification === 'add') {
+      return `added with value: ${dataFormatter(currentData)}`;
+    } else {
+      return 'removed';
+    }
+  }
+
   const nextData = next.data || next.children;
 
   if (current.path === next.path) {
@@ -42,7 +49,7 @@ const plain = diffEntries => {
     }
   });
 
-  const multilineDiff = formattedEntries.join('\n');
+  const multilineDiff = formattedEntries.filter(entry => entry !== '').join('\n');
 
   return multilineDiff;
 };
