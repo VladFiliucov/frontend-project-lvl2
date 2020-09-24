@@ -1,5 +1,6 @@
 import stylish from './stylish.js';
 import plain from './plain.js';
+import json from './json.js';
 
 export default format => {
   switch (format) {
@@ -7,6 +8,8 @@ export default format => {
       return stylish;
     case 'plain':
       return plain;
+    case 'json':
+      return json;
     default:
       throw new Error('only supported output format is stylish');
   }
