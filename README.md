@@ -25,3 +25,7 @@ Supports nested objects
 Plain format:
 
 [![asciicast](https://asciinema.org/a/euVAg6g9aojnnTAVqJxMuMmtC.svg)](https://asciinema.org/a/euVAg6g9aojnnTAVqJxMuMmtC?autoplay=1&theme=solarized-light)
+
+Raw JSON format (usefull for debugging purposes)
+
+[![asciicast](https://asciinema.org/a/o7dlexZZ8pp3ftLUAoQJmy4aw.svg)](https://asciinema.org/a/o7dlexZZ8pp3ftLUAoQJmy4aw)
