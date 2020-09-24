@@ -95,10 +95,9 @@ const compare = (beforeConfig, afterConfig) => {
       }
     });
 
-    // Root key won't show up in the path when only value of data object was changed
     const addedKeys = _.difference(Object.keys(nestedAfter), Object.keys(nestedBefore));
     addedKeys.forEach(key => {
-      const extendedPath = pathToProperty === '' ? key : `.${key}`;
+      const extendedPath = pathToProperty === '' ? key : `${pathToProperty}.${key}`;
 
       if (typeof nestedAfter[key] === 'object') {
         result.push({
