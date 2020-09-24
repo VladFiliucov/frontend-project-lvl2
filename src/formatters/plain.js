@@ -4,7 +4,7 @@ const dataFormatter = data => {
   if (typeof data === 'string') return `'${data}'`;
   if (typeof data === 'boolean') return data;
   if (Array.isArray(data)) return '[complex value]';
-}
+};
 
 const getChangelog = (current, next) => {
   if (current.modification === 'keep') return;
@@ -25,9 +25,8 @@ const getChangelog = (current, next) => {
     return `updated. From ${dataFormatter(currentData)} to ${dataFormatter(nextData)}`;
   } else if (current.modification === 'add') {
     return `added with value: ${dataFormatter(currentData)}`;
-  } else {
-    return 'removed';
   }
+  return 'removed';
 };
 
 const plain = diffEntries => {
