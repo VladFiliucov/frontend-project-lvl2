@@ -21,3 +21,7 @@ INI support:
 Supports nested objects
 
 [![asciicast](https://asciinema.org/a/hSqEVGxKA0n8YEpafgQfRKi25.svg)](https://asciinema.org/a/hSqEVGxKA0n8YEpafgQfRKi25?autoplay=1&theme=solarized-light)
+
+Plain format:
+
+[![asciicast](https://asciinema.org/a/euVAg6g9aojnnTAVqJxMuMmtC.svg)](https://asciinema.org/a/euVAg6g9aojnnTAVqJxMuMmtC?autoplay=1&theme=solarized-light)
