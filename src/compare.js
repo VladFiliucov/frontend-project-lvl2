@@ -14,7 +14,12 @@ const normalizeChildren = (entry, nestingLevel, modification, pathToProperty) =>
           tempData.type = 'object';
           tempData.modification = modification;
           tempData.depth = nestingLevel;
-          tempData.children = normalizeChildren(value, nestingLevel + 1, modification, tempData.path);
+          tempData.children = normalizeChildren(
+            value,
+            nestingLevel + 1,
+            modification,
+            tempData.path,
+          );
           break;
         default:
           tempData.type = 'primitive';

@@ -1,29 +1,26 @@
-import _ from 'lodash';
-
 const dataFormatter = data => {
   if (typeof data === 'string') return `'${data}'`;
-  if (typeof data === 'boolean') return data;
   if (Array.isArray(data)) return '[complex value]';
+
+  return data;
 };
 
 const getChangelog = (current, next) => {
-  if (current.modification === 'keep') return;
+  if (current.modification === 'keep') return null;
 
   const currentData = current.data || current.children;
 
   if (typeof next === 'undefined') {
-    if (current.modification === 'add') {
-      return `added with value: ${dataFormatter(currentData)}`;
-    } else {
-      return 'removed';
-    }
+    if (current.modification === 'add') return `added with value: ${dataFormatter(currentData)}`;
+    return 'removed';
   }
 
   const nextData = next.data || next.children;
 
   if (current.path === next.path) {
     return `updated. From ${dataFormatter(currentData)} to ${dataFormatter(nextData)}`;
-  } else if (current.modification === 'add') {
+  }
+  if (current.modification === 'add') {
     return `added with value: ${dataFormatter(currentData)}`;
   }
   return 'removed';
