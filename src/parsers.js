@@ -1,10 +1,15 @@
 import yaml from 'js-yaml';
 import ini from 'ini';
 
+const PARSERS = {
+  json: JSON.parse,
+  yml: yaml.safeLoad,
+  yaml: yaml.safeLoad,
+  ini: ini.parse,
+};
+
 const chooseParser = format => {
-  if (format === 'json') return JSON.parse;
-  if (format === 'yml' || format === 'yaml') return yaml.safeLoad;
-  if (format === 'ini') return ini.parse;
+  if (typeof PARSERS[format] !== 'undefined') return PARSERS[format];
 
   throw new Error('Unsupported format');
 };
