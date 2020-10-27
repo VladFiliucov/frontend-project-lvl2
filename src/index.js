@@ -5,12 +5,17 @@ import chooseParser from './parsers.js';
 import formatter from './formatters/index.js';
 
 export default (filepath1, filepath2, format = 'stylish') => {
-  const firstFileParser = chooseParser(filepath1);
-  const secondFileParser = chooseParser(filepath2);
-  const firstFileContent = readFileSync(path.resolve(filepath1), 'utf8');
-  const secondFileContent = readFileSync(path.resolve(filepath2), 'utf8');
-  const beforeConfig = firstFileParser(firstFileContent);
-  const afterConfig = secondFileParser(secondFileContent);
+  const beforeConfigFormat = path.extname(filepath1).slice(1);
+  const afterConfigFormat = path.extname(filepath2).slice(1);
+
+  const beforeConfigParser = chooseParser(beforeConfigFormat);
+  const afterConfigParser = chooseParser(afterConfigFormat);
+
+  const beforeConfigContent = readFileSync(path.resolve(filepath1), 'utf8');
+  const afterConfigContent = readFileSync(path.resolve(filepath2), 'utf8');
+
+  const beforeConfig = beforeConfigParser(beforeConfigContent);
+  const afterConfig = afterConfigParser(afterConfigContent);
 
   const result = compare(beforeConfig, afterConfig);
 
