@@ -19,5 +19,5 @@ export default (filepath1, filepath2, format = 'stylish') => {
 
   const result = compare(beforeConfig, afterConfig);
 
-  return formatter(format)(result);
+  // return formatter(format)(result);
 };
