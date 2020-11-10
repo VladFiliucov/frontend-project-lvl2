@@ -12,9 +12,21 @@ function isObject(obj) {
   return obj != null && obj.constructor.name === 'Object';
 }
 
-const toString = data => {
+const toString = (data, nestingLevel) => {
+  const currentIndentation = ' '.repeat(BASE_INDENTATION * (nestingLevel + 1));
+
   if (isObject(data)) {
-    return 'I am an object';
+    const start = '{';
+    const end = ' '.repeat(BASE_INDENTATION * nestingLevel) + '}';
+    const entries = Object.keys(data).map(key => {
+      if (isObject(data[key])) {
+        return `${currentIndentation}${key}: ${toString(data[key], nestingLevel + 1)}`;
+      }
+
+      return currentIndentation + `${key}: ${data[key]}`;
+    });
+
+    return [start, ...entries, end].join('\n');
   }
 
   return data;
@@ -28,6 +40,7 @@ const stylish = diffEntries => {
       remove: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
           data,
+          nestingLevel,
         )}`,
       keep: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel)}${key}: ${data}`,
