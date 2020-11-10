@@ -5,6 +5,7 @@ const modifications = {
   add: '+ ',
   remove: '- ',
   keep: '  ',
+  parent: '  ',
 };
 
 const stylish = diffEntries => {
@@ -33,13 +34,9 @@ const stylish = diffEntries => {
       : `${' '.repeat(nestingDepth)}{`;
     const end = `${' '.repeat(nestingDepth)}}`;
     const indentedEntries = entries.map(entry => {
-      const entryContent = Array.isArray(entry.children) ? 'yo' : formatter[entry.type](entry);
-      // ? formatOutput(
-      //     entry.children,
-      //     entry.depth * BASE_INDENTATION, REMOVED THIS
-      //     entry.keyName,
-      //     entry.modification,
-      //   )
+      const entryContent = Array.isArray(entry.children)
+        ? formatOutput(entry.children, entry.nestingLevel * BASE_INDENTATION, entry.key, entry.type)
+        : formatter[entry.type](entry);
 
       return entryContent;
     });
