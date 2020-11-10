@@ -8,13 +8,27 @@ const modifications = {
   parent: '  ',
 };
 
+function isObject(obj) {
+  return obj != null && obj.constructor.name === 'Object';
+}
+
+const toString = data => {
+  if (isObject(data)) {
+    return 'I am an object';
+  }
+
+  return data;
+};
+
 const stylish = diffEntries => {
   const formatOutput = (entries, nestingDepth, nestedKeyName, nestedKeyModification) => {
     const formatter = {
       add: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}+ ${key}: ${data}`,
       remove: ({ key, data, nestingLevel }) =>
-        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${data}`,
+        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
+          data,
+        )}`,
       keep: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel)}${key}: ${data}`,
       modified: ({ key, removedData, addedData, nestingLevel }) =>
@@ -29,6 +43,7 @@ const stylish = diffEntries => {
     const keyWithModification =
       nestedKeyModification && `${modifications[nestedKeyModification].concat(nestedKeyName)}`;
 
+    // Extract this into a func?
     const start = nestedKeyName
       ? `${' '.repeat(nestingDepth - SPACE_FOR_OPERATORS).concat(keyWithModification)}: {`
       : `${' '.repeat(nestingDepth)}{`;
