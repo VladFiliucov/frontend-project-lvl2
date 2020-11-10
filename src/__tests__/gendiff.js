@@ -80,14 +80,14 @@ describe('gendiff', () => {
       expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedStylishDiff);
     });
 
-    it('can generate diff for two objects in plain format', () => {
+    it.skip('can generate diff for two objects in plain format', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
       const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);
 
       expect(gendiff(beforeConfPath, afterConfPath, 'plain')).toBe(formattedPlainDiff);
     });
 
-    it('can generate diff for two objects in json format', () => {
+    it.skip('can generate diff for two objects in json format', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
       const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);
 

@@ -36,7 +36,10 @@ const stylish = diffEntries => {
   const formatOutput = (entries, nestingDepth, nestedKeyName, nestedKeyModification) => {
     const formatter = {
       add: ({ key, data, nestingLevel }) =>
-        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}+ ${key}: ${data}`,
+        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}+ ${key}: ${toString(
+          data,
+          nestingLevel,
+        )}`,
       remove: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
           data,
@@ -45,18 +48,17 @@ const stylish = diffEntries => {
       keep: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel)}${key}: ${data}`,
       modified: ({ key, removedData, addedData, nestingLevel }) =>
-        `${' '.repeat(
+        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
+          removedData,
+          nestingLevel,
+        )}\n${' '.repeat(
           BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS,
-        )}- ${key}: ${removedData}\n${' '.repeat(
-          BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS,
-        )}+ ${key}: ${addedData}`,
-      parent: ({ key, removedData, addedData, nestingLevel }) => `not sure yet`,
+        )}+ ${key}: ${toString(addedData, nestingLevel)}`,
     };
 
     const keyWithModification =
       nestedKeyModification && `${modifications[nestedKeyModification].concat(nestedKeyName)}`;
 
-    // Extract this into a func?
     const start = nestedKeyName
       ? `${' '.repeat(nestingDepth - SPACE_FOR_OPERATORS).concat(keyWithModification)}: {`
       : `${' '.repeat(nestingDepth)}{`;
