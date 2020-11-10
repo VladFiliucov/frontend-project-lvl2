@@ -8,7 +8,7 @@ const modifications = {
 };
 
 const stylish = diffEntries => {
-  const formatOutput = (entries, nestedKeyName, nestedKeyModification) => {
+  const formatOutput = (entries, nestingDepth, nestedKeyName, nestedKeyModification) => {
     const formatter = {
       add: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}+ ${key}: ${data}`,
@@ -29,9 +29,9 @@ const stylish = diffEntries => {
       nestedKeyModification && `${modifications[nestedKeyModification].concat(nestedKeyName)}`;
 
     const start = nestedKeyName
-      ? `${' '.repeat(nestingLevel - SPACE_FOR_OPERATORS).concat(keyWithModification)}: {`
-      : `${' '.repeat(nestingLevel)}{`;
-    const end = `${' '.repeat(nestingLevel)}}`;
+      ? `${' '.repeat(nestingDepth - SPACE_FOR_OPERATORS).concat(keyWithModification)}: {`
+      : `${' '.repeat(nestingDepth)}{`;
+    const end = `${' '.repeat(nestingDepth)}}`;
     const indentedEntries = entries.map(entry => {
       const entryContent = Array.isArray(entry.children) ? 'yo' : formatter[entry.type](entry);
       // ? formatOutput(

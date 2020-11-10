@@ -17,7 +17,7 @@ const compare = (oldConfig, newConfig) => {
           key,
           nestingLevel,
           type: 'remove',
-          removedData: beforeConfig[key],
+          data: beforeConfig[key],
         };
       }
 
