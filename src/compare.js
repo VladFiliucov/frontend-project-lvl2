@@ -6,7 +6,7 @@ function isObject(obj) {
 }
 
 const compare = (oldConfig, newConfig) => {
-  const innerCompare = (beforeConfig, afterConfig, nestingLevel = 0) => {
+  const innerCompare = (beforeConfig, afterConfig, nestingLevel = 1) => {
     const beforeKeys = Object.keys(beforeConfig);
     const afterKeys = Object.keys(afterConfig);
     const allKeys = [...new Set([...beforeKeys, ...afterKeys])];
@@ -17,7 +17,7 @@ const compare = (oldConfig, newConfig) => {
           key,
           nestingLevel,
           type: 'remove',
-          removedValue: beforeConfig[key],
+          removedData: beforeConfig[key],
         };
       }
 
@@ -26,7 +26,7 @@ const compare = (oldConfig, newConfig) => {
           key,
           nestingLevel,
           type: 'add',
-          value: afterConfig[key],
+          data: afterConfig[key],
         };
       }
 
@@ -48,8 +48,8 @@ const compare = (oldConfig, newConfig) => {
           key,
           nestingLevel,
           type: 'modified',
-          removedValue: beforeConfig[key],
-          addedValue: afterConfig[key],
+          removedData: beforeConfig[key],
+          addedData: afterConfig[key],
         };
       }
 
@@ -62,7 +62,7 @@ const compare = (oldConfig, newConfig) => {
           key,
           nestingLevel,
           type: 'keep',
-          value: beforeConfig[key],
+          data: beforeConfig[key],
         };
       }
     });
@@ -81,7 +81,7 @@ const compare = (oldConfig, newConfig) => {
   //     })
   //   }
   // })
-  console.log(res);
+  // console.log(res);
   return res;
 };
 

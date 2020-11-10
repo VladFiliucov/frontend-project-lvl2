@@ -8,14 +8,21 @@ const modifications = {
 };
 
 const stylish = diffEntries => {
-  const formatOutput = (entries, nestingLevel = 0, nestedKeyName, nestedKeyModification) => {
+  const formatOutput = (entries, nestedKeyName, nestedKeyModification) => {
     const formatter = {
-      add: (key, value, nestingDepth) =>
-        `${' '.repeat(BASE_INDENTATION * nestingDepth - SPACE_FOR_OPERATORS)}+ ${key}: ${value}`,
-      remove: (key, value, nestingDepth) =>
-        `${' '.repeat(BASE_INDENTATION * nestingDepth - SPACE_FOR_OPERATORS)}- ${key}: ${value}`,
-      keep: (key, value, nestingDepth) =>
-        `${' '.repeat(BASE_INDENTATION * nestingDepth)}${key}: ${value}`,
+      add: ({ key, data, nestingLevel }) =>
+        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}+ ${key}: ${data}`,
+      remove: ({ key, data, nestingLevel }) =>
+        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${data}`,
+      keep: ({ key, data, nestingLevel }) =>
+        `${' '.repeat(BASE_INDENTATION * nestingLevel)}${key}: ${data}`,
+      modified: ({ key, removedData, addedData, nestingLevel }) =>
+        `${' '.repeat(
+          BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS,
+        )}- ${key}: ${removedData}\n${' '.repeat(
+          BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS,
+        )}+ ${key}: ${addedData}`,
+      parent: ({ key, removedData, addedData, nestingLevel }) => `not sure yet`,
     };
 
     const keyWithModification =
@@ -26,14 +33,13 @@ const stylish = diffEntries => {
       : `${' '.repeat(nestingLevel)}{`;
     const end = `${' '.repeat(nestingLevel)}}`;
     const indentedEntries = entries.map(entry => {
-      const entryContent = Array.isArray(entry.children)
-        ? formatOutput(
-            entry.children,
-            entry.depth * BASE_INDENTATION,
-            entry.keyName,
-            entry.modification,
-          )
-        : formatter[entry.modification](entry.keyName, entry.data, entry.depth);
+      const entryContent = Array.isArray(entry.children) ? 'yo' : formatter[entry.type](entry);
+      // ? formatOutput(
+      //     entry.children,
+      //     entry.depth * BASE_INDENTATION, REMOVED THIS
+      //     entry.keyName,
+      //     entry.modification,
+      //   )
 
       return entryContent;
     });
