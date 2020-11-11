@@ -17,13 +17,13 @@ const toString = (data, nestingLevel) => {
 
   if (isObject(data)) {
     const start = '{';
-    const end = ' '.repeat(BASE_INDENTATION * nestingLevel) + '}';
+    const end = `${' '.repeat(BASE_INDENTATION * nestingLevel)}}`;
     const entries = Object.keys(data).map(key => {
       if (isObject(data[key])) {
         return `${currentIndentation}${key}: ${toString(data[key], nestingLevel + 1)}`;
       }
 
-      return currentIndentation + `${key}: ${data[key]}`;
+      return `${currentIndentation}${key}: ${data[key]}`;
     });
 
     return [start, ...entries, end].join('\n');
