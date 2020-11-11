@@ -1,3 +1,5 @@
+import isObject from '../utils.js';
+
 const BASE_INDENTATION = 4;
 const SPACE_FOR_OPERATORS = 2;
 
@@ -5,35 +7,64 @@ const modifications = {
   add: '+ ',
   remove: '- ',
   keep: '  ',
+  parent: '  ',
+};
+
+const toString = (data, nestingLevel) => {
+  const currentIndentation = ' '.repeat(BASE_INDENTATION * (nestingLevel + 1));
+
+  if (isObject(data)) {
+    const start = '{';
+    const end = `${' '.repeat(BASE_INDENTATION * nestingLevel)}}`;
+    const entries = Object.keys(data).map(key => {
+      if (isObject(data[key])) {
+        return `${currentIndentation}${key}: ${toString(data[key], nestingLevel + 1)}`;
+      }
+
+      return `${currentIndentation}${key}: ${data[key]}`;
+    });
+
+    return [start, ...entries, end].join('\n');
+  }
+
+  return data;
 };
 
 const stylish = diffEntries => {
-  const formatOutput = (entries, nestingLevel = 0, nestedKeyName, nestedKeyModification) => {
+  const formatOutput = (entries, nestingDepth, nestedKeyName, nestedKeyModification) => {
     const formatter = {
-      add: (key, value, nestingDepth) =>
-        `${' '.repeat(BASE_INDENTATION * nestingDepth - SPACE_FOR_OPERATORS)}+ ${key}: ${value}`,
-      remove: (key, value, nestingDepth) =>
-        `${' '.repeat(BASE_INDENTATION * nestingDepth - SPACE_FOR_OPERATORS)}- ${key}: ${value}`,
-      keep: (key, value, nestingDepth) =>
-        `${' '.repeat(BASE_INDENTATION * nestingDepth)}${key}: ${value}`,
+      add: ({ key, data, nestingLevel }) =>
+        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}+ ${key}: ${toString(
+          data,
+          nestingLevel,
+        )}`,
+      remove: ({ key, data, nestingLevel }) =>
+        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
+          data,
+          nestingLevel,
+        )}`,
+      keep: ({ key, data, nestingLevel }) =>
+        `${' '.repeat(BASE_INDENTATION * nestingLevel)}${key}: ${data}`,
+      modified: ({ key, removedData, addedData, nestingLevel }) =>
+        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
+          removedData,
+          nestingLevel,
+        )}\n${' '.repeat(
+          BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS,
+        )}+ ${key}: ${toString(addedData, nestingLevel)}`,
     };
 
     const keyWithModification =
       nestedKeyModification && `${modifications[nestedKeyModification].concat(nestedKeyName)}`;
 
     const start = nestedKeyName
-      ? `${' '.repeat(nestingLevel - SPACE_FOR_OPERATORS).concat(keyWithModification)}: {`
-      : `${' '.repeat(nestingLevel)}{`;
-    const end = `${' '.repeat(nestingLevel)}}`;
+      ? `${' '.repeat(nestingDepth - SPACE_FOR_OPERATORS).concat(keyWithModification)}: {`
+      : `${' '.repeat(nestingDepth)}{`;
+    const end = `${' '.repeat(nestingDepth)}}`;
     const indentedEntries = entries.map(entry => {
       const entryContent = Array.isArray(entry.children)
-        ? formatOutput(
-            entry.children,
-            entry.depth * BASE_INDENTATION,
-            entry.keyName,
-            entry.modification,
-          )
-        : formatter[entry.modification](entry.keyName, entry.data, entry.depth);
+        ? formatOutput(entry.children, entry.nestingLevel * BASE_INDENTATION, entry.key, entry.type)
+        : formatter[entry.type](entry);
 
       return entryContent;
     });
