@@ -80,7 +80,7 @@ describe('gendiff', () => {
       expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedStylishDiff);
     });
 
-    it.skip('can generate diff for two objects in plain format', () => {
+    it('can generate diff for two objects in plain format', () => {
       const beforeConfPath = path.join(process.cwd(), '__fixtures__', `confBefore.${extension}`);
       const afterConfPath = path.join(process.cwd(), '__fixtures__', `confAfter.${extension}`);
 
