@@ -21,16 +21,16 @@ const getChangelog = current => {
   return null;
 };
 
+const getChangelogMessageOrNull = (node, key) =>
+  getChangelog(node) && `Property '${key}' was ${getChangelog(node)}`;
+
 const getChildrenChangelog = (children, parents) => {
   return children.map(child => {
     if (child.children && child.children.length) {
       return getChildrenChangelog(child.children, parents.concat(child.key));
     }
 
-    return (
-      getChangelog(child) &&
-      `Property '${[...parents, child.key].join('.')}' was ${getChangelog(child)}`
-    );
+    return getChangelogMessageOrNull(child, [...parents, child.key].join('.'));
   });
 };
 
@@ -38,15 +38,10 @@ const plain = diffEntries => {
   const formattedEntries = diffEntries.map(entry => {
     return entry.children && entry.children.length
       ? getChildrenChangelog(entry.children, [entry.key])
-      : getChangelog(entry)
-      ? `Property '${entry.key}' was ${getChangelog(entry)}`
-      : null;
+      : getChangelogMessageOrNull(entry, entry.key);
   });
 
-  const multilineDiff = formattedEntries
-    .flat(Infinity)
-    .filter(e => e !== null)
-    .join('\n');
+  const multilineDiff = formattedEntries.flat(Infinity).filter(Boolean).join('\n');
 
   return multilineDiff;
 };
