@@ -65,6 +65,8 @@ const compare = (oldConfig, newConfig) => {
           data: beforeConfig[key],
         };
       }
+
+      throw new Error('something went wrong');
     });
 
     return nodes;
