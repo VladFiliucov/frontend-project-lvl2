@@ -72,19 +72,7 @@ const compare = (oldConfig, newConfig) => {
     return nodes;
   };
 
-  const res = innerCompare(oldConfig, newConfig);
-  // res.forEach(yo => {
-  //   if (yo && yo.children && yo.children.length) {
-  //     // console.log(yo.children)
-  //     yo.children.forEach(c2 => {
-  //       if (c2 && c2.children && c2.children.length) {
-  //         console.log(c2.children)
-  //       }
-  //     })
-  //   }
-  // })
-  // console.log(res);
-  return res;
+  return innerCompare(oldConfig, newConfig);
 };
 
 export default compare;
