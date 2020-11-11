@@ -1,9 +1,5 @@
 import _ from 'lodash';
-
-// NOTE: might not work in IE. Should be good in Node
-function isObject(obj) {
-  return obj != null && obj.constructor.name === 'Object';
-}
+import isObject from './utils.js';
 
 const compare = (oldConfig, newConfig) => {
   const innerCompare = (beforeConfig, afterConfig, nestingLevel = 1) => {

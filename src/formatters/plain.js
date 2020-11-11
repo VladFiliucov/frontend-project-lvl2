@@ -1,6 +1,4 @@
-function isObject(obj) {
-  return obj != null && obj.constructor.name === 'Object';
-}
+import isObject from '../utils.js';
 
 const dataFormatter = data => {
   if (typeof data === 'string') return `'${data}'`;

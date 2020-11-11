@@ -1,3 +1,5 @@
+import isObject from '../utils.js';
+
 const BASE_INDENTATION = 4;
 const SPACE_FOR_OPERATORS = 2;
 
@@ -7,10 +9,6 @@ const modifications = {
   keep: '  ',
   parent: '  ',
 };
-
-function isObject(obj) {
-  return obj != null && obj.constructor.name === 'Object';
-}
 
 const toString = (data, nestingLevel) => {
   const currentIndentation = ' '.repeat(BASE_INDENTATION * (nestingLevel + 1));
