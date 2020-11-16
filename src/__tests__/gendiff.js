@@ -61,10 +61,20 @@ Property 'new_object' was added with value: [complex value]`;
 });
 
 describe('gendiff', () => {
+  describe('when path to file does not exist', () => {
+    it('throws path not found error', () => {
+      expect(() => {
+        gendiff('foo.doc', 'bar.png');
+      }).toThrow('Did not find config file at given path');
+    });
+  });
+
   describe('when unsupported format', () => {
     it('throws Unsupported format error', () => {
       expect(() => {
-        gendiff('foo.doc', 'bar.png');
+        const pathToUnsupportedTypeFile = path.join(process.cwd(), '__fixtures__', 'foo.doc');
+
+        gendiff(pathToUnsupportedTypeFile, pathToUnsupportedTypeFile);
       }).toThrow('Unsupported format');
     });
   });
