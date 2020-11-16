@@ -1,21 +1,21 @@
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import path from 'path';
 import compare from './compare.js';
-import chooseParser from './parsers.js';
+import parse from './parsers.js';
 import formatter from './formatters/index.js';
 
 export default (filepath1, filepath2, format = 'stylish') => {
+  if (!existsSync(filepath1) || !existsSync(filepath2)) {
+    throw new Error('Did not find config file at given path');
+  }
   const beforeConfigFormat = path.extname(filepath1).slice(1);
   const afterConfigFormat = path.extname(filepath2).slice(1);
-
-  const beforeConfigParser = chooseParser(beforeConfigFormat);
-  const afterConfigParser = chooseParser(afterConfigFormat);
 
   const beforeConfigContent = readFileSync(path.resolve(filepath1), 'utf8');
   const afterConfigContent = readFileSync(path.resolve(filepath2), 'utf8');
 
-  const beforeConfig = beforeConfigParser(beforeConfigContent);
-  const afterConfig = afterConfigParser(afterConfigContent);
+  const beforeConfig = parse(beforeConfigFormat, beforeConfigContent);
+  const afterConfig = parse(afterConfigFormat, afterConfigContent);
 
   const result = compare(beforeConfig, afterConfig);
 
