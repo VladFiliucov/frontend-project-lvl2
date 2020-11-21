@@ -75,7 +75,7 @@ describe('gendiff', () => {
         const pathToUnsupportedTypeFile = path.join(process.cwd(), '__fixtures__', 'foo.doc');
 
         gendiff(pathToUnsupportedTypeFile, pathToUnsupportedTypeFile);
-      }).toThrow('Unsupported format');
+      }).toThrow('Format doc is not supported. Supported formats are json, yml, yaml, ini');
     });
   });
 

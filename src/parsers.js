@@ -13,7 +13,9 @@ const parse = (format, rawContent) => {
 
   if (parser) return parser(rawContent);
 
-  throw new Error('Unsupported format');
+  throw new Error(
+    `Format ${format} is not supported. Supported formats are ${Object.keys(PARSERS).join(', ')}`,
+  );
 };
 
 export default parse;
