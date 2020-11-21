@@ -33,11 +33,7 @@ const compare = (oldConfig, newConfig) => {
         };
       }
 
-      if (
-        _.has(beforeConfig, key) &&
-        _.has(afterConfig, key) &&
-        beforeConfig[key] !== afterConfig[key]
-      ) {
+      if (beforeConfig[key] !== afterConfig[key]) {
         return {
           key,
           nestingLevel,
@@ -47,11 +43,7 @@ const compare = (oldConfig, newConfig) => {
         };
       }
 
-      if (
-        _.has(beforeConfig, key) &&
-        _.has(afterConfig, key) &&
-        beforeConfig[key] === afterConfig[key]
-      ) {
+      if (beforeConfig[key] === afterConfig[key]) {
         return {
           key,
           nestingLevel,
