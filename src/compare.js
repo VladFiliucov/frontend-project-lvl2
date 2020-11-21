@@ -3,9 +3,7 @@ import isObject from './utils.js';
 
 const compare = (oldConfig, newConfig) => {
   const innerCompare = (beforeConfig, afterConfig, nestingLevel = 1) => {
-    const beforeKeys = Object.keys(beforeConfig);
-    const afterKeys = Object.keys(afterConfig);
-    const allKeys = [...new Set([...beforeKeys, ...afterKeys])];
+    const allKeys = _.union(Object.keys(beforeConfig), Object.keys(afterConfig));
 
     const nodes = allKeys.map(key => {
       if (_.has(beforeConfig, key) && !_.has(afterConfig, key)) {
