@@ -8,8 +8,8 @@ const dataFormatter = data => {
 };
 
 const getChangelog = current => {
-  if (current.type === 'remove') return 'removed';
-  if (current.type === 'add') return `added with value: ${dataFormatter(current.data)}`;
+  if (current.type === 'removal') return 'removed';
+  if (current.type === 'addition') return `added with value: ${dataFormatter(current.data)}`;
   if (current.type === 'modified') {
     return `updated. From ${dataFormatter(current.removedData)} to ${dataFormatter(
       current.addedData,

@@ -10,7 +10,7 @@ const compare = (oldConfig, newConfig) => {
         return {
           key,
           nestingLevel,
-          type: 'remove',
+          type: 'removal',
           data: beforeConfig[key],
         };
       }
@@ -19,7 +19,7 @@ const compare = (oldConfig, newConfig) => {
         return {
           key,
           nestingLevel,
-          type: 'add',
+          type: 'addition',
           data: afterConfig[key],
         };
       }
@@ -55,7 +55,7 @@ const compare = (oldConfig, newConfig) => {
         return {
           key,
           nestingLevel,
-          type: 'keep',
+          type: 'persisted',
           data: beforeConfig[key],
         };
       }

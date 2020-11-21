@@ -4,9 +4,9 @@ const BASE_INDENTATION = 4;
 const SPACE_FOR_OPERATORS = 2;
 
 const modifications = {
-  add: '+ ',
-  remove: '- ',
-  keep: '  ',
+  addition: '+ ',
+  removal: '- ',
+  persisted: '  ',
   parent: '  ',
 };
 
@@ -33,17 +33,17 @@ const toString = (data, nestingLevel) => {
 const stylish = diffEntries => {
   const formatOutput = (entries, nestingDepth, nestedKeyName, nestedKeyModification) => {
     const formatter = {
-      add: ({ key, data, nestingLevel }) =>
+      addition: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}+ ${key}: ${toString(
           data,
           nestingLevel,
         )}`,
-      remove: ({ key, data, nestingLevel }) =>
+      removal: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
           data,
           nestingLevel,
         )}`,
-      keep: ({ key, data, nestingLevel }) =>
+      persisted: ({ key, data, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel)}${key}: ${data}`,
       modified: ({ key, removedData, addedData, nestingLevel }) =>
         `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
