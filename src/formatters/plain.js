@@ -1,8 +1,8 @@
-import isObject from '../utils.js';
+import _ from 'lodash';
 
 const dataFormatter = data => {
   if (typeof data === 'string') return `'${data}'`;
-  if (isObject(data)) return '[complex value]';
+  if (_.isPlainObject(data)) return '[complex value]';
 
   return data;
 };

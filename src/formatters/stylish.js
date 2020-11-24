@@ -1,4 +1,4 @@
-import isObject from '../utils.js';
+import _ from 'lodash';
 
 const BASE_INDENTATION = 4;
 const SPACE_FOR_OPERATORS = 2;
@@ -13,11 +13,11 @@ const modifications = {
 const toString = (data, nestingLevel) => {
   const currentIndentation = ' '.repeat(BASE_INDENTATION * (nestingLevel + 1));
 
-  if (isObject(data)) {
+  if (_.isPlainObject(data)) {
     const start = '{';
     const end = `${' '.repeat(BASE_INDENTATION * nestingLevel)}}`;
     const entries = Object.keys(data).map(key => {
-      if (isObject(data[key])) {
+      if (_.isPlainObject(data[key])) {
         return `${currentIndentation}${key}: ${toString(data[key], nestingLevel + 1)}`;
       }
 
