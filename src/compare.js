@@ -51,7 +51,7 @@ const compare = (oldConfig, newConfig) => {
         };
       }
 
-      throw new Error('something went wrong');
+      throw new Error("Couldn't compare properties ", beforeConfig[key], afterConfig[key]);
     });
 
     return nodes;
