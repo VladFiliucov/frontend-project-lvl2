@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import isObject from './utils.js';
 
 const compare = (oldConfig, newConfig) => {
   const innerCompare = (beforeConfig, afterConfig, nestingLevel = 1) => {
@@ -24,7 +23,7 @@ const compare = (oldConfig, newConfig) => {
         };
       }
 
-      if (isObject(beforeConfig[key]) && isObject(afterConfig[key])) {
+      if (_.isPlainObject(beforeConfig[key]) && _.isPlainObject(afterConfig[key])) {
         return {
           key,
           nestingLevel,
@@ -33,7 +32,7 @@ const compare = (oldConfig, newConfig) => {
         };
       }
 
-      if (beforeConfig[key] !== afterConfig[key]) {
+      if (!_.isEqual(beforeConfig[key], afterConfig[key])) {
         return {
           key,
           nestingLevel,
@@ -43,7 +42,7 @@ const compare = (oldConfig, newConfig) => {
         };
       }
 
-      if (beforeConfig[key] === afterConfig[key]) {
+      if (_.isEqual(beforeConfig[key], afterConfig[key])) {
         return {
           key,
           nestingLevel,
