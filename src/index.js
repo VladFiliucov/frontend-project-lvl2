@@ -17,7 +17,7 @@ export default (filepath1, filepath2, format = 'stylish') => {
   const beforeConfig = parse(beforeConfigFormat, beforeConfigContent);
   const afterConfig = parse(afterConfigFormat, afterConfigContent);
 
-  const result = compare(beforeConfig, afterConfig);
+  const rawData = compare(beforeConfig, afterConfig);
 
-  return formatter(format)(result);
+  return formatter(format, rawData);
 };
