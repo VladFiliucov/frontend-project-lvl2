@@ -19,8 +19,11 @@ const getChangelog = current => {
   return null;
 };
 
-const getChangelogMessageOrNull = (node, key) =>
-  getChangelog(node) && `Property '${key}' was ${getChangelog(node)}`;
+const getChangelogMessageOrNull = (node, key) => {
+  const changelog = getChangelog(node);
+
+  return changelog ? `Property '${key}' was ${changelog}` : null;
+};
 
 const getChildrenChangelog = (children, parents) => {
   return children.map(child => {
