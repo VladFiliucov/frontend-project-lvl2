@@ -2,15 +2,14 @@ import stylish from './stylish.js';
 import plain from './plain.js';
 import json from './json.js';
 
+const FORMATTERS = { stylish, plain, json };
+
 export default (format, rawData) => {
-  switch (format) {
-    case 'stylish':
-      return stylish(rawData);
-    case 'plain':
-      return plain(rawData);
-    case 'json':
-      return json(rawData);
-    default:
-      throw new Error('only supported output format is stylish');
-  }
+  const formatter = FORMATTERS[format];
+
+  if (formatter) return formatter(rawData);
+
+  throw new Error(
+    `Output format ${format} is not supported. Try one of ${Object.keys(FORMATTERS).join(', ')}`,
+  );
 };
