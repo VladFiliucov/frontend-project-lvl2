@@ -16,35 +16,21 @@ const getChangelog = current => {
     )}`;
   }
 
-  return null;
-};
-
-const getChangelogMessageOrNull = (node, key) => {
-  const changelog = getChangelog(node);
-
-  return changelog ? `Property '${key}' was ${changelog}` : null;
-};
-
-const getChildrenChangelog = (children, parents) => {
-  return children.map(child => {
-    if (child.children && child.children.length) {
-      return getChildrenChangelog(child.children, parents.concat(child.key));
-    }
-
-    return getChangelogMessageOrNull(child, [...parents, child.key].join('.'));
-  });
+  return null; // To make linter happy with consistent returns
 };
 
 const plain = diffEntries => {
-  const formattedEntries = diffEntries.map(entry => {
-    return entry.children && entry.children.length
-      ? getChildrenChangelog(entry.children, [entry.key])
-      : getChangelogMessageOrNull(entry, entry.key);
-  });
+  const iter = (nodes, nameAcc) =>
+    nodes.flatMap(node => {
+      if (node.type === 'parent') return iter(node.children, [...nameAcc, node.key]);
 
-  const multilineDiff = formattedEntries.flat(Infinity).filter(Boolean).join('\n');
+      const changelog = getChangelog(node);
+      const keyName = [...nameAcc, node.key].join('.');
 
-  return multilineDiff;
+      return changelog ? `Property '${keyName}' was ${changelog}` : [];
+    });
+
+  return iter(diffEntries, []).join('\n');
 };
 
 export default plain;
