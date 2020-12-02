@@ -76,35 +76,33 @@ const stylishx = diffEntries => {
   return formatOutput(diffEntries);
 };
 
-const dataFormatter = data => {
-  if (_.isPlainObject(data)) return '[complex value]';
+const indent = depth => ' '.repeat(BASE_INDENTATION * depth - SPACE_FOR_OPERATORS);
+
+const dataFormatter = (data, depth) => {
+  if (_.isPlainObject(data)) {
+    // Should we handle objects here?
+    return ['{', `${indent(depth)}  }`].join('\n');
+  }
 
   return data;
 };
 
-const indent = depth => ' '.repeat(BASE_INDENTATION * depth - SPACE_FOR_OPERATORS);
-
 const getChangelog = (node, depth) => {
   if (node.type === 'persisted') {
-    return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data)}`;
+    return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data, depth)}`;
   }
   if (node.type === 'modified') {
-    const removed = `${indent(depth)}- ${node.key}: ${dataFormatter(node.removedData)}`;
-    const added = `${indent(depth)}+ ${node.key}: ${dataFormatter(node.addedData)}`;
+    const removed = `${indent(depth)}- ${node.key}: ${dataFormatter(node.removedData, depth)}`;
+    const added = `${indent(depth)}+ ${node.key}: ${dataFormatter(node.addedData, depth)}`;
 
     return [removed, added];
   }
   if (node.type === 'addition') {
-    return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data)}`;
+    return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data, depth)}`;
   }
   if (node.type === 'removal') {
-    return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data)}`;
+    return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data, depth)}`;
   }
-  // if (current.type === 'modified') {
-  //   return `updated. From ${dataFormatter(current.removedData)} to ${dataFormatter(
-  //     current.addedData,
-  //   )}`;
-  // }
 
   return null; // To make linter happy with consistent returns
 };
