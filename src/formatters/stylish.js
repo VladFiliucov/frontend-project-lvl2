@@ -14,7 +14,6 @@ const toString = (data, nestingLevel) => {
   const currentIndentation = ' '.repeat(BASE_INDENTATION * (nestingLevel + 1));
 
   if (_.isPlainObject(data)) {
-    const start = '{';
     const end = `${' '.repeat(BASE_INDENTATION * nestingLevel)}}`;
     const entries = Object.keys(data).map(key => {
       if (_.isPlainObject(data[key])) {
@@ -24,13 +23,13 @@ const toString = (data, nestingLevel) => {
       return `${currentIndentation}${key}: ${data[key]}`;
     });
 
-    return [start, ...entries, end].join('\n');
+    return ['{', ...entries, end].join('\n');
   }
 
   return data;
 };
 
-const stylish = diffEntries => {
+const stylishx = diffEntries => {
   const formatOutput = (entries, nestingDepth, nestedKeyName, nestedKeyModification) => {
     const formatter = {
       addition: ({ key, data, nestingLevel }) =>
@@ -75,6 +74,59 @@ const stylish = diffEntries => {
   };
 
   return formatOutput(diffEntries);
+};
+
+const dataFormatter = data => {
+  if (_.isPlainObject(data)) return '[complex value]';
+
+  return data;
+};
+
+const indent = depth => ' '.repeat(BASE_INDENTATION * depth - SPACE_FOR_OPERATORS);
+
+const getChangelog = (node, depth) => {
+  if (node.type === 'persisted') {
+    return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data)}`;
+  }
+  if (node.type === 'modified') {
+    const removed = `${indent(depth)}- ${node.key}: ${dataFormatter(node.removedData)}`;
+    const added = `${indent(depth)}+ ${node.key}: ${dataFormatter(node.addedData)}`;
+
+    return [removed, added];
+  }
+  if (node.type === 'addition') {
+    return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data)}`;
+  }
+  if (node.type === 'removal') {
+    return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data)}`;
+  }
+  // if (current.type === 'modified') {
+  //   return `updated. From ${dataFormatter(current.removedData)} to ${dataFormatter(
+  //     current.addedData,
+  //   )}`;
+  // }
+
+  return null; // To make linter happy with consistent returns
+};
+
+const stylish = diffEntries => {
+  const iter = (nodes, depth) => {
+    return nodes.flatMap(node => {
+      if (node.type === 'parent') {
+        return [
+          `  ${indent(depth)}${node.key}: {`,
+          iter(node.children, depth + 1).join('\n'),
+          `  ${indent(depth)}}`,
+        ];
+      }
+
+      return getChangelog(node, depth) || [];
+    });
+  };
+
+  const diff = iter(diffEntries, 1);
+
+  return ['{', ...diff, '}'].join('\n');
 };
 
 export default stylish;
