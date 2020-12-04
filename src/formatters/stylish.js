@@ -13,34 +13,30 @@ const dataFormatter = (data, depth) => {
           `${indent(depth)}      ${entryKey}: ${dataFormatter(entryValue, depth + 1)}`,
       )
       .join('\n');
-    return `{\n${formattedObjectDiff}\n${indent(depth)}  }`;
+    return [`{\n${formattedObjectDiff}\n${indent(depth)}  }`];
   }
-
   return data;
 };
 
 const getChangelog = (node, depth) => {
-  if (node.type === 'persisted') {
+  if (node.type === 'persisted')
     return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data, depth)}`;
-  }
+  if (node.type === 'addition')
+    return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data, depth)}`;
+  if (node.type === 'removal')
+    return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data, depth)}`;
   if (node.type === 'modified') {
     const removed = `${indent(depth)}- ${node.key}: ${dataFormatter(node.removedData, depth)}`;
     const added = `${indent(depth)}+ ${node.key}: ${dataFormatter(node.addedData, depth)}`;
-
     return [removed, added];
   }
-  if (node.type === 'addition') {
-    return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data, depth)}`;
-  }
-  if (node.type === 'removal') {
-    return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data, depth)}`;
-  }
+
   return null; // To make linter happy with consistent returns
 };
 
 const stylish = diffEntries => {
-  const iter = (nodes, depth) => {
-    return nodes.flatMap(node => {
+  const iter = (nodes, depth) =>
+    nodes.flatMap(node => {
       if (node.type === 'parent') {
         return [
           `  ${indent(depth)}${node.key}: {`,
@@ -51,8 +47,6 @@ const stylish = diffEntries => {
 
       return getChangelog(node, depth) || [];
     });
-  };
-
   const diff = iter(diffEntries, 1);
 
   return ['{', ...diff, '}'].join('\n');
