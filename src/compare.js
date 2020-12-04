@@ -1,14 +1,13 @@
 import _ from 'lodash';
 
 const compare = (oldConfig, newConfig) => {
-  const innerCompare = (beforeConfig, afterConfig, nestingLevel = 1) => {
+  const innerCompare = (beforeConfig, afterConfig) => {
     const allKeys = _.union(Object.keys(beforeConfig), Object.keys(afterConfig));
 
     const nodes = allKeys.map(key => {
       if (_.has(beforeConfig, key) && !_.has(afterConfig, key)) {
         return {
           key,
-          nestingLevel,
           type: 'removal',
           data: beforeConfig[key],
         };
@@ -17,7 +16,6 @@ const compare = (oldConfig, newConfig) => {
       if (!_.has(beforeConfig, key) && _.has(afterConfig, key)) {
         return {
           key,
-          nestingLevel,
           type: 'addition',
           data: afterConfig[key],
         };
@@ -26,16 +24,14 @@ const compare = (oldConfig, newConfig) => {
       if (_.isPlainObject(beforeConfig[key]) && _.isPlainObject(afterConfig[key])) {
         return {
           key,
-          nestingLevel,
           type: 'parent',
-          children: innerCompare(beforeConfig[key], afterConfig[key], nestingLevel + 1),
+          children: innerCompare(beforeConfig[key], afterConfig[key]),
         };
       }
 
       if (!_.isEqual(beforeConfig[key], afterConfig[key])) {
         return {
           key,
-          nestingLevel,
           type: 'modified',
           removedData: beforeConfig[key],
           addedData: afterConfig[key],
@@ -45,7 +41,6 @@ const compare = (oldConfig, newConfig) => {
       if (_.isEqual(beforeConfig[key], afterConfig[key])) {
         return {
           key,
-          nestingLevel,
           type: 'persisted',
           data: beforeConfig[key],
         };
