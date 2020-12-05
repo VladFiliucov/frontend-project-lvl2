@@ -62,6 +62,9 @@ Property 'new_object' was added with value: [complex value]`;
 
 const FIXTURES_PATH = ['__tests__', '__fixtures__'];
 
+const getFixture = (filename, options = { pathToFixtures: FIXTURES_PATH }) =>
+  path.join(process.cwd(), ...options.pathToFixtures, filename);
+
 describe('gendiff', () => {
   describe('when path to file does not exist', () => {
     it('throws path not found error', () => {
@@ -74,7 +77,7 @@ describe('gendiff', () => {
   describe('when unsupported format', () => {
     it('throws Unsupported format error', () => {
       expect(() => {
-        const pathToUnsupportedTypeFile = path.join(process.cwd(), ...FIXTURES_PATH, 'foo.doc');
+        const pathToUnsupportedTypeFile = getFixture('foo.doc');
 
         gendiff(pathToUnsupportedTypeFile, pathToUnsupportedTypeFile);
       }).toThrow('Format doc is not supported. Supported formats are json, yml, yaml, ini');
@@ -86,22 +89,22 @@ describe('gendiff', () => {
   // он работает иначе.
   describe.each(['json', 'yml' /* , 'ini' */])('in %s format', extension => {
     it('can generate diff for two objects in stylish format', () => {
-      const beforeConfPath = path.join(process.cwd(), ...FIXTURES_PATH, `confBefore.${extension}`);
-      const afterConfPath = path.join(process.cwd(), ...FIXTURES_PATH, `confAfter.${extension}`);
+      const beforeConfPath = getFixture(`confBefore.${extension}`);
+      const afterConfPath = getFixture(`confAfter.${extension}`);
 
       expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedStylishDiff);
     });
 
     it('can generate diff for two objects in plain format', () => {
-      const beforeConfPath = path.join(process.cwd(), ...FIXTURES_PATH, `confBefore.${extension}`);
-      const afterConfPath = path.join(process.cwd(), ...FIXTURES_PATH, `confAfter.${extension}`);
+      const beforeConfPath = getFixture(`confBefore.${extension}`);
+      const afterConfPath = getFixture(`confAfter.${extension}`);
 
       expect(gendiff(beforeConfPath, afterConfPath, 'plain')).toBe(formattedPlainDiff);
     });
 
     it('can generate diff for two objects in json format', () => {
-      const beforeConfPath = path.join(process.cwd(), ...FIXTURES_PATH, `confBefore.${extension}`);
-      const afterConfPath = path.join(process.cwd(), ...FIXTURES_PATH, `confAfter.${extension}`);
+      const beforeConfPath = getFixture(`confBefore.${extension}`);
+      const afterConfPath = getFixture(`confAfter.${extension}`);
 
       expect(gendiff(beforeConfPath, afterConfPath, 'json')).toBe(formattedJSONDiff);
     });
