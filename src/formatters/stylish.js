@@ -5,6 +5,19 @@ const SPACE_FOR_OPERATORS = 2;
 
 const indent = depth => ' '.repeat(BASE_INDENTATION * depth - SPACE_FOR_OPERATORS);
 
+const dataFormatter = (data, depth) => {
+  if (_.isPlainObject(data)) {
+    const formattedObjectDiff = Object.entries(data)
+      .map(
+        ([entryKey, entryValue]) =>
+          `${indent(depth)}      ${entryKey}: ${dataFormatter(entryValue, depth + 1)}`,
+      )
+      .join('\n');
+    return [`{\n${formattedObjectDiff}\n${indent(depth)}  }`];
+  }
+  return data;
+};
+
 const getChangelog = (node, depth) => {
   if (node.type === 'persisted')
     return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data, depth)}`;
@@ -35,19 +48,5 @@ const stylish = diffEntries => {
 
   return ['{', ...diff, '}'].join('\n');
 };
-
-const dataFormatter = (data, depth) => {
-  if (_.isPlainObject(data)) {
-    const formattedObjectDiff = Object.entries(data)
-      .map(
-        ([entryKey, entryValue]) =>
-          `${indent(depth)}      ${entryKey}: ${dataFormatter(entryValue, depth + 1)}`,
-      )
-      .join('\n');
-    return [`{\n${formattedObjectDiff}\n${indent(depth)}  }`];
-  }
-  return data;
-};
-
 
 export default stylish;
