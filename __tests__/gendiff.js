@@ -1,52 +1,11 @@
 import path from 'path';
 import gendiff from '../src/index.js';
+import formattedStylishDiff from './__fixtures__/formattedStylishDiff.js';
 
-let formattedStylishDiff;
 let formattedPlainDiff;
 let formattedJSONDiff;
 
 beforeAll(() => {
-  formattedStylishDiff = `{
-    name: gendiff
-  - type: module
-  + type: true
-    version: 1.0.0
-    setting6: {
-        key: value
-      + ops: vops
-    }
-  - description: CLI tool for comparing config files
-  + description: CLI foo tool for comparing config files
-  - proxy: false
-  - nest: {
-        type: module
-        moreNest: {
-            name: vlad
-        }
-    }
-  - simple: true
-  + simple: {
-        made_easy: true
-        and: {
-            even: easier
-        }
-    }
-    subset: {
-        key: {
-          - foo: bar
-          + foo: baz
-        }
-    }
-  + verbose: true
-  + new_object: {
-        name: zara home
-        address: {
-            street: four dials
-            postcode: E20
-        }
-    }
-}`;
-
   formattedPlainDiff = `Property 'type' was updated. From 'module' to true
 Property 'setting6.ops' was added with value: 'vops'
 Property 'description' was updated. From 'CLI tool for comparing config files' to 'CLI foo tool for comparing config files'
