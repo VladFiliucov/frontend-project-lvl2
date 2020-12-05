@@ -1,5 +1,5 @@
 import path from 'path';
-import gendiff from '../index.js';
+import gendiff from '../src/index.js';
 
 let formattedStylishDiff;
 let formattedPlainDiff;
