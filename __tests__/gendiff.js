@@ -1,21 +1,11 @@
 import path from 'path';
 import gendiff from '../src/index.js';
 import formattedStylishDiff from './__fixtures__/formattedStylishDiff.js';
+import formattedPlainDiff from './__fixtures__/formattedPlainDiff.js';
 
-let formattedPlainDiff;
 let formattedJSONDiff;
 
 beforeAll(() => {
-  formattedPlainDiff = `Property 'type' was updated. From 'module' to true
-Property 'setting6.ops' was added with value: 'vops'
-Property 'description' was updated. From 'CLI tool for comparing config files' to 'CLI foo tool for comparing config files'
-Property 'proxy' was removed
-Property 'nest' was removed
-Property 'simple' was updated. From true to [complex value]
-Property 'subset.key.foo' was updated. From 'bar' to 'baz'
-Property 'verbose' was added with value: true
-Property 'new_object' was added with value: [complex value]`;
-
   formattedJSONDiff = `[{"key":"name","type":"persisted","data":"gendiff"},{"key":"type","type":"modified","removedData":"module","addedData":true},{"key":"version","type":"persisted","data":"1.0.0"},{"key":"setting6","type":"parent","children":[{"key":"key","type":"persisted","data":"value"},{"key":"ops","type":"addition","data":"vops"}]},{"key":"description","type":"modified","removedData":"CLI tool for comparing config files","addedData":"CLI foo tool for comparing config files"},{"key":"proxy","type":"removal","data":false},{"key":"nest","type":"removal","data":{"type":"module","moreNest":{"name":"vlad"}}},{"key":"simple","type":"modified","removedData":true,"addedData":{"made_easy":true,"and":{"even":"easier"}}},{"key":"subset","type":"parent","children":[{"key":"key","type":"parent","children":[{"key":"foo","type":"modified","removedData":"bar","addedData":"baz"}]}]},{"key":"verbose","type":"addition","data":true},{"key":"new_object","type":"addition","data":{"name":"zara home","address":{"street":"four dials","postcode":"E20"}}}]`;
 });
 
