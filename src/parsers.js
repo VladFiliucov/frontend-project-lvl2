@@ -8,10 +8,14 @@ const PARSERS = {
   ini: ini.parse,
 };
 
-const chooseParser = format => {
-  if (typeof PARSERS[format] !== 'undefined') return PARSERS[format];
+const parse = (format, rawContent) => {
+  const parser = PARSERS[format];
 
-  throw new Error('Unsupported format');
+  if (parser) return parser(rawContent);
+
+  throw new Error(
+    `Format ${format} is not supported. Supported formats are ${Object.keys(PARSERS).join(', ')}`,
+  );
 };
 
-export default chooseParser;
+export default parse;

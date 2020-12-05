@@ -1,18 +1,14 @@
 import _ from 'lodash';
-import isObject from './utils.js';
 
 const compare = (oldConfig, newConfig) => {
-  const innerCompare = (beforeConfig, afterConfig, nestingLevel = 1) => {
-    const beforeKeys = Object.keys(beforeConfig);
-    const afterKeys = Object.keys(afterConfig);
-    const allKeys = [...new Set([...beforeKeys, ...afterKeys])];
+  const innerCompare = (beforeConfig, afterConfig) => {
+    const allKeys = _.union(Object.keys(beforeConfig), Object.keys(afterConfig));
 
     const nodes = allKeys.map(key => {
       if (_.has(beforeConfig, key) && !_.has(afterConfig, key)) {
         return {
           key,
-          nestingLevel,
-          type: 'remove',
+          type: 'removal',
           data: beforeConfig[key],
         };
       }
@@ -20,49 +16,37 @@ const compare = (oldConfig, newConfig) => {
       if (!_.has(beforeConfig, key) && _.has(afterConfig, key)) {
         return {
           key,
-          nestingLevel,
-          type: 'add',
+          type: 'addition',
           data: afterConfig[key],
         };
       }
 
-      if (isObject(beforeConfig[key]) && isObject(afterConfig[key])) {
+      if (_.isPlainObject(beforeConfig[key]) && _.isPlainObject(afterConfig[key])) {
         return {
           key,
-          nestingLevel,
           type: 'parent',
-          children: innerCompare(beforeConfig[key], afterConfig[key], nestingLevel + 1),
+          children: innerCompare(beforeConfig[key], afterConfig[key]),
         };
       }
 
-      if (
-        _.has(beforeConfig, key) &&
-        _.has(afterConfig, key) &&
-        beforeConfig[key] !== afterConfig[key]
-      ) {
+      if (!_.isEqual(beforeConfig[key], afterConfig[key])) {
         return {
           key,
-          nestingLevel,
           type: 'modified',
           removedData: beforeConfig[key],
           addedData: afterConfig[key],
         };
       }
 
-      if (
-        _.has(beforeConfig, key) &&
-        _.has(afterConfig, key) &&
-        beforeConfig[key] === afterConfig[key]
-      ) {
+      if (_.isEqual(beforeConfig[key], afterConfig[key])) {
         return {
           key,
-          nestingLevel,
-          type: 'keep',
+          type: 'persisted',
           data: beforeConfig[key],
         };
       }
 
-      throw new Error('something went wrong');
+      throw new Error("Couldn't compare properties ", beforeConfig[key], afterConfig[key]);
     });
 
     return nodes;

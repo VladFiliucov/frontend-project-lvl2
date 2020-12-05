@@ -1,80 +1,52 @@
-import isObject from '../utils.js';
+import _ from 'lodash';
 
 const BASE_INDENTATION = 4;
 const SPACE_FOR_OPERATORS = 2;
 
-const modifications = {
-  add: '+ ',
-  remove: '- ',
-  keep: '  ',
-  parent: '  ',
-};
+const indent = depth => ' '.repeat(BASE_INDENTATION * depth - SPACE_FOR_OPERATORS);
 
-const toString = (data, nestingLevel) => {
-  const currentIndentation = ' '.repeat(BASE_INDENTATION * (nestingLevel + 1));
-
-  if (isObject(data)) {
-    const start = '{';
-    const end = `${' '.repeat(BASE_INDENTATION * nestingLevel)}}`;
-    const entries = Object.keys(data).map(key => {
-      if (isObject(data[key])) {
-        return `${currentIndentation}${key}: ${toString(data[key], nestingLevel + 1)}`;
-      }
-
-      return `${currentIndentation}${key}: ${data[key]}`;
-    });
-
-    return [start, ...entries, end].join('\n');
+const dataFormatter = (data, depth) => {
+  if (_.isPlainObject(data)) {
+    const formattedObjectDiff = Object.entries(data)
+      .map(
+        ([entryKey, entryValue]) =>
+          `${indent(depth)}      ${entryKey}: ${dataFormatter(entryValue, depth + 1)}`,
+      )
+      .join('\n');
+    return [`{\n${formattedObjectDiff}\n${indent(depth)}  }`];
   }
-
   return data;
 };
 
+const getChangelog = (node, depth) => {
+  if (node.type === 'persisted')
+    return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data, depth)}`;
+  if (node.type === 'addition')
+    return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data, depth)}`;
+  if (node.type === 'removal')
+    return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data, depth)}`;
+
+  const removed = `${indent(depth)}- ${node.key}: ${dataFormatter(node.removedData, depth)}`;
+  const added = `${indent(depth)}+ ${node.key}: ${dataFormatter(node.addedData, depth)}`;
+  return [removed, added];
+};
+
 const stylish = diffEntries => {
-  const formatOutput = (entries, nestingDepth, nestedKeyName, nestedKeyModification) => {
-    const formatter = {
-      add: ({ key, data, nestingLevel }) =>
-        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}+ ${key}: ${toString(
-          data,
-          nestingLevel,
-        )}`,
-      remove: ({ key, data, nestingLevel }) =>
-        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
-          data,
-          nestingLevel,
-        )}`,
-      keep: ({ key, data, nestingLevel }) =>
-        `${' '.repeat(BASE_INDENTATION * nestingLevel)}${key}: ${data}`,
-      modified: ({ key, removedData, addedData, nestingLevel }) =>
-        `${' '.repeat(BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS)}- ${key}: ${toString(
-          removedData,
-          nestingLevel,
-        )}\n${' '.repeat(
-          BASE_INDENTATION * nestingLevel - SPACE_FOR_OPERATORS,
-        )}+ ${key}: ${toString(addedData, nestingLevel)}`,
-    };
+  const iter = (nodes, depth) =>
+    nodes.flatMap(node => {
+      if (node.type === 'parent') {
+        return [
+          `  ${indent(depth)}${node.key}: {`,
+          iter(node.children, depth + 1).join('\n'),
+          `  ${indent(depth)}}`,
+        ];
+      }
 
-    const keyWithModification =
-      nestedKeyModification && `${modifications[nestedKeyModification].concat(nestedKeyName)}`;
-
-    const start = nestedKeyName
-      ? `${' '.repeat(nestingDepth - SPACE_FOR_OPERATORS).concat(keyWithModification)}: {`
-      : `${' '.repeat(nestingDepth)}{`;
-    const end = `${' '.repeat(nestingDepth)}}`;
-    const indentedEntries = entries.map(entry => {
-      const entryContent = Array.isArray(entry.children)
-        ? formatOutput(entry.children, entry.nestingLevel * BASE_INDENTATION, entry.key, entry.type)
-        : formatter[entry.type](entry);
-
-      return entryContent;
+      return getChangelog(node, depth) || [];
     });
-    const result = [start, ...indentedEntries, end];
-    const multilineDiff = result.join('\n');
+  const diff = iter(diffEntries, 1);
 
-    return multilineDiff;
-  };
-
-  return formatOutput(diffEntries);
+  return ['{', ...diff, '}'].join('\n');
 };
 
 export default stylish;
