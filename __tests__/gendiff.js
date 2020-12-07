@@ -10,7 +10,7 @@ const getFixture = (filename, options = { pathToFixtures: FIXTURES_PATH }) =>
   path.join(process.cwd(), ...options.pathToFixtures, filename);
 
 describe('gendiff', () => {
-  describe('when path to file does not exist', () => {
+  test('when path to file does not exist', () => {
     it('throws path not found error', () => {
       expect(() => {
         gendiff('foo.doc', 'bar.png');
