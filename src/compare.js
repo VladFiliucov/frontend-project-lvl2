@@ -5,7 +5,7 @@ const compare = (oldConfig, newConfig) => {
     const allKeys = _.union(Object.keys(beforeConfig), Object.keys(afterConfig));
 
     const nodes = allKeys.map(key => {
-      if (_.has(beforeConfig, key) && !_.has(afterConfig, key)) {
+      if (!_.has(afterConfig, key)) {
         return {
           key,
           type: 'removal',
@@ -13,7 +13,7 @@ const compare = (oldConfig, newConfig) => {
         };
       }
 
-      if (!_.has(beforeConfig, key) && _.has(afterConfig, key)) {
+      if (!_.has(beforeConfig, key)) {
         return {
           key,
           type: 'addition',
