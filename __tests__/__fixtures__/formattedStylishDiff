@@ -1,4 +1,4 @@
-const formattedStylishDiff = `{
+{
     name: gendiff
   - type: module
   + type: true
@@ -37,6 +37,4 @@ const formattedStylishDiff = `{
             postcode: E20
         }
     }
-}`;
-
-export default formattedStylishDiff;
+}
