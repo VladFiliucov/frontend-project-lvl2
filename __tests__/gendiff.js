@@ -10,14 +10,6 @@ const getFixture = (filename, options = { pathToFixtures: FIXTURES_PATH }) =>
   path.join(process.cwd(), ...options.pathToFixtures, filename);
 
 describe('gendiff', () => {
-  test('can throw Unsupported format error', () => {
-    expect(() => {
-      const pathToUnsupportedTypeFile = getFixture('foo.doc');
-
-      gendiff(pathToUnsupportedTypeFile, pathToUnsupportedTypeFile);
-    }).toThrow('Format doc is not supported. Supported formats are json, yml, yaml');
-  });
-
   test.each(['json', 'yml'])('can generate dif in %s format', extension => {
     const beforeConfPath = getFixture(`confBefore.${extension}`);
     const afterConfPath = getFixture(`confAfter.${extension}`);
