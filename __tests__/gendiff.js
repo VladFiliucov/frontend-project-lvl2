@@ -10,39 +10,21 @@ const getFixture = (filename, options = { pathToFixtures: FIXTURES_PATH }) =>
   path.join(process.cwd(), ...options.pathToFixtures, filename);
 
 describe('gendiff', () => {
-  describe('when unsupported format', () => {
-    it('throws Unsupported format error', () => {
-      expect(() => {
-        const pathToUnsupportedTypeFile = getFixture('foo.doc');
+  test('can throw Unsupported format error', () => {
+    expect(() => {
+      const pathToUnsupportedTypeFile = getFixture('foo.doc');
 
-        gendiff(pathToUnsupportedTypeFile, pathToUnsupportedTypeFile);
-      }).toThrow('Format doc is not supported. Supported formats are json, yml, yaml, ini');
-    });
+      gendiff(pathToUnsupportedTypeFile, pathToUnsupportedTypeFile);
+    }).toThrow('Format doc is not supported. Supported formats are json, yml, yaml, ini');
   });
 
-  // В формате ini не получилось использовать в перемешку корневые и вложенные свойства.
-  // Как вариант - могу написать отдельную спеку для этого формата - что-бы выделить то, что
-  // он работает иначе.
-  describe.each(['json', 'yml' /* , 'ini' */])('in %s format', extension => {
-    it('can generate diff for two objects in stylish format', () => {
-      const beforeConfPath = getFixture(`confBefore.${extension}`);
-      const afterConfPath = getFixture(`confAfter.${extension}`);
+  test.each(['json', 'yml'])('can generate dif in %s format', extension => {
+    const beforeConfPath = getFixture(`confBefore.${extension}`);
+    const afterConfPath = getFixture(`confAfter.${extension}`);
 
-      expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedStylishDiff);
-    });
-
-    it('can generate diff for two objects in plain format', () => {
-      const beforeConfPath = getFixture(`confBefore.${extension}`);
-      const afterConfPath = getFixture(`confAfter.${extension}`);
-
-      expect(gendiff(beforeConfPath, afterConfPath, 'plain')).toBe(formattedPlainDiff);
-    });
-
-    it('can generate diff for two objects in json format', () => {
-      const beforeConfPath = getFixture(`confBefore.${extension}`);
-      const afterConfPath = getFixture(`confAfter.${extension}`);
-
-      expect(gendiff(beforeConfPath, afterConfPath, 'json')).toBe(formattedJSONDiff);
-    });
+    expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedStylishDiff);
+    expect(gendiff(beforeConfPath, afterConfPath, 'stylish')).toBe(formattedStylishDiff);
+    expect(gendiff(beforeConfPath, afterConfPath, 'plain')).toBe(formattedPlainDiff);
+    expect(gendiff(beforeConfPath, afterConfPath, 'json')).toBe(formattedJSONDiff);
   });
 });
