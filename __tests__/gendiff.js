@@ -15,7 +15,7 @@ describe('gendiff', () => {
       const pathToUnsupportedTypeFile = getFixture('foo.doc');
 
       gendiff(pathToUnsupportedTypeFile, pathToUnsupportedTypeFile);
-    }).toThrow('Format doc is not supported. Supported formats are json, yml, yaml, ini');
+    }).toThrow('Format doc is not supported. Supported formats are json, yml, yaml');
   });
 
   test.each(['json', 'yml'])('can generate dif in %s format', extension => {
