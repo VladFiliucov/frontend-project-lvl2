@@ -37,15 +37,11 @@ const compare = (beforeConfig, afterConfig) => {
       };
     }
 
-    if (_.isEqual(beforeConfig[key], afterConfig[key])) {
-      return {
-        key,
-        type: 'persisted',
-        data: beforeConfig[key],
-      };
-    }
-
-    throw new Error("Couldn't compare properties ", beforeConfig[key], afterConfig[key]);
+    return {
+      key,
+      type: 'persisted',
+      data: beforeConfig[key],
+    };
   });
 
   return nodes;
