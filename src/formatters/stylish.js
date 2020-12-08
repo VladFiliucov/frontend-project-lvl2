@@ -38,7 +38,5 @@ const getChangelog = (node, depth) => {
   return [removed, added].join('\n');
 };
 
-const stylish = diffEntries =>
+export default diffEntries =>
   ['{', diffEntries.flatMap(node => getChangelog(node, 1) || []).join('\n'), '}'].join('\n');
-
-export default stylish;

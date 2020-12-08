@@ -7,30 +7,20 @@ const dataFormatter = data => {
   return data;
 };
 
-const getChangelog = current => {
-  if (current.type === 'removal') return 'removed';
-  if (current.type === 'addition') return `added with value: ${dataFormatter(current.data)}`;
-  if (current.type === 'modified') {
-    return `updated. From ${dataFormatter(current.removedData)} to ${dataFormatter(
-      current.addedData,
-    )}`;
-  }
+const getChangelog = (current, nameAcc = []) => {
+  const keyName = [...nameAcc, current.key].join('.');
+
+  if (current.type === 'removal') return `Property '${keyName}' was removed`;
+  if (current.type === 'addition')
+    return `Property '${keyName}' was added with value: ${dataFormatter(current.data)}`;
+  if (current.type === 'modified')
+    return `Property '${keyName}' was updated. From ${dataFormatter(
+      current.removedData,
+    )} to ${dataFormatter(current.addedData)}`;
+  if (current.type === 'parent')
+    return _.compact(current.children.map(child => getChangelog(child, [...nameAcc, current.key])));
 
   return null; // To make linter happy with consistent returns
 };
 
-const plain = diffEntries => {
-  const iter = (nodes, nameAcc) =>
-    nodes.flatMap(node => {
-      if (node.type === 'parent') return iter(node.children, [...nameAcc, node.key]);
-
-      const changelog = getChangelog(node);
-      const keyName = [...nameAcc, node.key].join('.');
-
-      return changelog ? `Property '${keyName}' was ${changelog}` : [];
-    });
-
-  return iter(diffEntries, []).join('\n');
-};
-
-export default plain;
+export default diffEntries => diffEntries.flatMap(node => getChangelog(node) || []).join('\n');
