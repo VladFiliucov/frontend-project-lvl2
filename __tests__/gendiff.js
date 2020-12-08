@@ -10,14 +10,6 @@ const getFixture = (filename, options = { pathToFixtures: FIXTURES_PATH }) =>
   path.join(process.cwd(), ...options.pathToFixtures, filename);
 
 describe('gendiff', () => {
-  test('when path to file does not exist', () => {
-    it('throws path not found error', () => {
-      expect(() => {
-        gendiff('foo.doc', 'bar.png');
-      }).toThrow('Did not find config file at given path');
-    });
-  });
-
   describe('when unsupported format', () => {
     it('throws Unsupported format error', () => {
       expect(() => {
