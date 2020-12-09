@@ -1,58 +1,50 @@
 import _ from 'lodash';
 
-const compare = (oldConfig, newConfig) => {
-  const innerCompare = (beforeConfig, afterConfig) => {
-    const allKeys = _.union(Object.keys(beforeConfig), Object.keys(afterConfig));
+const compare = (beforeConfig, afterConfig) => {
+  const allKeys = _.union(Object.keys(beforeConfig), Object.keys(afterConfig));
 
-    const nodes = allKeys.map(key => {
-      if (!_.has(afterConfig, key)) {
-        return {
-          key,
-          type: 'removal',
-          data: beforeConfig[key],
-        };
-      }
+  const nodes = allKeys.map(key => {
+    if (!_.has(afterConfig, key)) {
+      return {
+        key,
+        type: 'deleted',
+        data: beforeConfig[key],
+      };
+    }
 
-      if (!_.has(beforeConfig, key)) {
-        return {
-          key,
-          type: 'addition',
-          data: afterConfig[key],
-        };
-      }
+    if (!_.has(beforeConfig, key)) {
+      return {
+        key,
+        type: 'added',
+        data: afterConfig[key],
+      };
+    }
 
-      if (_.isPlainObject(beforeConfig[key]) && _.isPlainObject(afterConfig[key])) {
-        return {
-          key,
-          type: 'parent',
-          children: innerCompare(beforeConfig[key], afterConfig[key]),
-        };
-      }
+    if (_.isPlainObject(beforeConfig[key]) && _.isPlainObject(afterConfig[key])) {
+      return {
+        key,
+        type: 'parent',
+        children: compare(beforeConfig[key], afterConfig[key]),
+      };
+    }
 
-      if (!_.isEqual(beforeConfig[key], afterConfig[key])) {
-        return {
-          key,
-          type: 'modified',
-          removedData: beforeConfig[key],
-          addedData: afterConfig[key],
-        };
-      }
+    if (!_.isEqual(beforeConfig[key], afterConfig[key])) {
+      return {
+        key,
+        type: 'modified',
+        removedData: beforeConfig[key],
+        addedData: afterConfig[key],
+      };
+    }
 
-      if (_.isEqual(beforeConfig[key], afterConfig[key])) {
-        return {
-          key,
-          type: 'persisted',
-          data: beforeConfig[key],
-        };
-      }
+    return {
+      key,
+      type: 'unmodified',
+      data: beforeConfig[key],
+    };
+  });
 
-      throw new Error("Couldn't compare properties ", beforeConfig[key], afterConfig[key]);
-    });
-
-    return nodes;
-  };
-
-  return innerCompare(oldConfig, newConfig);
+  return nodes;
 };
 
 export default compare;

@@ -19,34 +19,24 @@ const dataFormatter = (data, depth) => {
 };
 
 const getChangelog = (node, depth) => {
-  if (node.type === 'persisted')
+  if (node.type === 'unmodified')
     return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data, depth)}`;
-  if (node.type === 'addition')
+  if (node.type === 'added')
     return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data, depth)}`;
-  if (node.type === 'removal')
+  if (node.type === 'deleted')
     return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data, depth)}`;
+  if (node.type === 'parent') {
+    return [
+      `  ${indent(depth)}${node.key}: {`,
+      node.children.map(child => getChangelog(child, depth + 1)).join('\n'),
+      `  ${indent(depth)}}`,
+    ].join('\n');
+  }
 
   const removed = `${indent(depth)}- ${node.key}: ${dataFormatter(node.removedData, depth)}`;
   const added = `${indent(depth)}+ ${node.key}: ${dataFormatter(node.addedData, depth)}`;
-  return [removed, added];
+  return [removed, added].join('\n');
 };
 
-const stylish = diffEntries => {
-  const iter = (nodes, depth) =>
-    nodes.flatMap(node => {
-      if (node.type === 'parent') {
-        return [
-          `  ${indent(depth)}${node.key}: {`,
-          iter(node.children, depth + 1).join('\n'),
-          `  ${indent(depth)}}`,
-        ];
-      }
-
-      return getChangelog(node, depth) || [];
-    });
-  const diff = iter(diffEntries, 1);
-
-  return ['{', ...diff, '}'].join('\n');
-};
-
-export default stylish;
+export default diffEntries =>
+  ['{', diffEntries.flatMap(node => getChangelog(node, 1) || []).join('\n'), '}'].join('\n');
