@@ -7,7 +7,7 @@ const compare = (beforeConfig, afterConfig) => {
     if (!_.has(afterConfig, key)) {
       return {
         key,
-        type: 'removal',
+        type: 'deleted',
         data: beforeConfig[key],
       };
     }
@@ -15,7 +15,7 @@ const compare = (beforeConfig, afterConfig) => {
     if (!_.has(beforeConfig, key)) {
       return {
         key,
-        type: 'addition',
+        type: 'added',
         data: afterConfig[key],
       };
     }
@@ -39,7 +39,7 @@ const compare = (beforeConfig, afterConfig) => {
 
     return {
       key,
-      type: 'persisted',
+      type: 'unmodified',
       data: beforeConfig[key],
     };
   });

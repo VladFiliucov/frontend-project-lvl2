@@ -10,8 +10,8 @@ const dataFormatter = data => {
 const getChangelog = (current, nameAcc = []) => {
   const keyName = [...nameAcc, current.key].join('.');
 
-  if (current.type === 'removal') return `Property '${keyName}' was removed`;
-  if (current.type === 'addition')
+  if (current.type === 'deleted') return `Property '${keyName}' was removed`;
+  if (current.type === 'added')
     return `Property '${keyName}' was added with value: ${dataFormatter(current.data)}`;
   if (current.type === 'modified')
     return `Property '${keyName}' was updated. From ${dataFormatter(

@@ -19,11 +19,11 @@ const dataFormatter = (data, depth) => {
 };
 
 const getChangelog = (node, depth) => {
-  if (node.type === 'persisted')
+  if (node.type === 'unmodified')
     return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data, depth)}`;
-  if (node.type === 'addition')
+  if (node.type === 'added')
     return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data, depth)}`;
-  if (node.type === 'removal')
+  if (node.type === 'deleted')
     return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data, depth)}`;
   if (node.type === 'parent') {
     return [
