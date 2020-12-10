@@ -30,7 +30,7 @@ gendiff [options] <filepath1> <filepath2>
   -h, --help           output usage information
 ```
 
-### Examples
+### Examples:
 
 Basic:
 ```
@@ -46,6 +46,7 @@ gendiff path/to/config.json path/to/updated_config.json --format=plain
 
 ```
 
+### More visual examples
 
 JSON support:
 
