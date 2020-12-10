@@ -19,24 +19,28 @@ const dataFormatter = (data, depth) => {
 };
 
 const getChangelog = (node, depth) => {
-  if (node.type === 'unmodified')
-    return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data, depth)}`;
-  if (node.type === 'added')
-    return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data, depth)}`;
-  if (node.type === 'deleted')
-    return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data, depth)}`;
-  if (node.type === 'parent') {
-    return [
-      `  ${indent(depth)}${node.key}: {`,
-      node.children.map(child => getChangelog(child, depth + 1)).join('\n'),
-      `  ${indent(depth)}}`,
-    ].join('\n');
+  switch (node.type) {
+    case 'unmodified':
+      return `${indent(depth)}  ${node.key}: ${dataFormatter(node.data, depth)}`;
+    case 'added':
+      return `${indent(depth)}+ ${node.key}: ${dataFormatter(node.data, depth)}`;
+    case 'deleted':
+      return `${indent(depth)}- ${node.key}: ${dataFormatter(node.data, depth)}`;
+    case 'parent':
+      return [
+        `  ${indent(depth)}${node.key}: {`,
+        node.children.map(child => getChangelog(child, depth + 1)).join('\n'),
+        `  ${indent(depth)}}`,
+      ].join('\n');
+    case 'modified':
+      return [
+        `${indent(depth)}- ${node.key}: ${dataFormatter(node.removedData, depth)}`,
+        `${indent(depth)}+ ${node.key}: ${dataFormatter(node.addedData, depth)}`,
+      ].join('\n');
+    default:
+      throw new Error('Unknown type: ', node.type);
   }
-
-  const removed = `${indent(depth)}- ${node.key}: ${dataFormatter(node.removedData, depth)}`;
-  const added = `${indent(depth)}+ ${node.key}: ${dataFormatter(node.addedData, depth)}`;
-  return [removed, added].join('\n');
 };
 
 export default diffEntries =>
-  ['{', diffEntries.flatMap(node => getChangelog(node, 1) || []).join('\n'), '}'].join('\n');
+  ['{', diffEntries.flatMap(node => getChangelog(node, 1)).join('\n'), '}'].join('\n');
