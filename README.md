@@ -2,9 +2,50 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9342f5e640a6c0131db4/test_coverage)](https://codeclimate.com/github/VladFiliucov/frontend-project-lvl2/test_coverage)
 [![](https://github.com/vladfiliucov/frontend-project-lvl2/workflows/CI/badge.svg)](https://github.com/VladFiliucov/frontend-project-lvl2/actions)
 
-# Description:
+## Description:
 
-Show difference between two config files:
+`gendiff` is a CLI tool to compare `json` and `yaml` files. Primarily intended to be used with configuration files.
+
+## Installation:
+
+Make sure you are running on node 14.
+
+```
+git clone git@github.com:VladFiliucov/frontend-project-lvl2.git
+cd frontend-project-lvl2
+npm link
+```
+
+## Usage:
+
+```
+gendiff [options] <filepath1> <filepath2>
+```
+
+### Options:
+
+```
+  -v, --version        output the current version
+  -f, --format [type]  output format
+  -h, --help           output usage information
+```
+
+### Examples
+
+Basic:
+```
+
+gendiff path/to/config.yml path/to/updated_config.yml
+
+```
+
+Plain format:
+```
+
+gendiff path/to/config.json path/to/updated_config.json --format=plain
+
+```
+
 
 JSON support:
 
