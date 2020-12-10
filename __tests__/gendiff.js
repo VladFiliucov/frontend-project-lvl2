@@ -19,10 +19,18 @@ const formatsWithExtensions = FILE_EXTENSIONS.flatMap(extension =>
 );
 
 describe('gendiff', () => {
+  const formattedDiffs = {};
+
+  beforeAll(() => {
+    SUPPORTED_FORMATS.forEach(format => {
+      formattedDiffs[format] = _.trim(getFixtureContent(`formatted${format}Diff`));
+    });
+  });
+
   test.each(formatsWithExtensions)('format %s and extension %s', (format, extension) => {
     const beforeConfPath = getFixturePath(`confBefore.${extension}`);
     const afterConfPath = getFixturePath(`confAfter.${extension}`);
-    const formattedDiff = _.trim(getFixtureContent(`formatted${format}Diff`));
+    const formattedDiff = formattedDiffs[format];
 
     expect(gendiff(beforeConfPath, afterConfPath, format.toLowerCase())).toBe(formattedDiff);
   });
