@@ -24,8 +24,12 @@ const getChangelog = (current, nameAcc = []) => {
         current.children.map(child => getChangelog(child, [...nameAcc, current.key])),
       );
     default:
-      return null;
+      return [];
   }
 };
 
-export default diffEntries => diffEntries.flatMap(node => getChangelog(node) || []).join('\n');
+export default diffEntries => {
+  const modificationMessages = diffEntries.map(node => getChangelog(node));
+
+  return _.flattenDeep(modificationMessages).join('\n');
+};
