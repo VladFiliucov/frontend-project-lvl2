@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const dataFormatter = data => {
+const dataFormatter = (data) => {
   if (typeof data === 'string') return `'${data}'`;
   if (_.isPlainObject(data)) return '[complex value]';
 
@@ -21,7 +21,7 @@ const getChangelog = (current, nameAcc = []) => {
       )} to ${dataFormatter(current.addedData)}`;
     case 'parent':
       return _.compact(
-        current.children.map(child => getChangelog(child, [...nameAcc, current.key])),
+        current.children.map((child) => getChangelog(child, [...nameAcc, current.key])),
       );
     case 'unmodified':
       return [];
@@ -30,8 +30,8 @@ const getChangelog = (current, nameAcc = []) => {
   }
 };
 
-export default diffEntries => {
-  const modificationMessages = diffEntries.map(node => getChangelog(node));
+export default (diffEntries) => {
+  const modificationMessages = diffEntries.map((node) => getChangelog(node));
 
   return _.flattenDeep(modificationMessages).join('\n');
 };
