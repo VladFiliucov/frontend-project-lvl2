@@ -6,16 +6,16 @@ const SPACE_FOR_OPERATORS = 2;
 const indent = depth => ' '.repeat(BASE_INDENTATION * depth - SPACE_FOR_OPERATORS);
 
 const dataFormatter = (data, depth) => {
-  if (_.isPlainObject(data)) {
-    const formattedObjectDiff = Object.entries(data)
-      .map(
-        ([entryKey, entryValue]) =>
-          `${indent(depth)}      ${entryKey}: ${dataFormatter(entryValue, depth + 1)}`,
-      )
-      .join('\n');
-    return [`{\n${formattedObjectDiff}\n${indent(depth)}  }`];
-  }
-  return data;
+  if (!_.isPlainObject(data)) return data;
+
+  const formattedObjectDiff = Object.entries(data)
+    .map(
+      ([entryKey, entryValue]) =>
+        `${indent(depth)}      ${entryKey}: ${dataFormatter(entryValue, depth + 1)}`,
+    )
+    .join('\n');
+
+  return [`{\n${formattedObjectDiff}\n${indent(depth)}  }`];
 };
 
 const getChangelog = (node, depth) => {
