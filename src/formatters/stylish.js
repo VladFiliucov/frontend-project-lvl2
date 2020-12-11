@@ -3,15 +3,16 @@ import _ from 'lodash';
 const BASE_INDENTATION = 4;
 const SPACE_FOR_OPERATORS = 2;
 
-const indent = depth => ' '.repeat(BASE_INDENTATION * depth - SPACE_FOR_OPERATORS);
+const indent = (depth) => ' '.repeat(BASE_INDENTATION * depth - SPACE_FOR_OPERATORS);
 
 const dataFormatter = (data, depth) => {
   if (!_.isPlainObject(data)) return data;
 
   const formattedObjectDiff = Object.entries(data)
     .map(
-      ([entryKey, entryValue]) =>
-        `${indent(depth)}      ${entryKey}: ${dataFormatter(entryValue, depth + 1)}`,
+      ([entryKey, entryValue]) => (
+        `${indent(depth)}      ${entryKey}: ${dataFormatter(entryValue, depth + 1)}`
+      ),
     )
     .join('\n');
 
@@ -29,7 +30,7 @@ const getChangelog = (node, depth) => {
     case 'parent':
       return [
         `  ${indent(depth)}${node.key}: {`,
-        node.children.map(child => getChangelog(child, depth + 1)).join('\n'),
+        node.children.map((child) => getChangelog(child, depth + 1)).join('\n'),
         `  ${indent(depth)}}`,
       ].join('\n');
     case 'modified':
@@ -42,8 +43,8 @@ const getChangelog = (node, depth) => {
   }
 };
 
-export default diffEntries => {
-  const logLines = diffEntries.flatMap(node => getChangelog(node, 1)).join('\n');
+export default (diffEntries) => {
+  const logLines = diffEntries.flatMap((node) => getChangelog(node, 1)).join('\n');
 
   return ['{', logLines, '}'].join('\n');
 };
