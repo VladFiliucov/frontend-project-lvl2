@@ -23,8 +23,10 @@ const getChangelog = (current, nameAcc = []) => {
       return _.compact(
         current.children.map(child => getChangelog(child, [...nameAcc, current.key])),
       );
-    default:
+    case 'unmodified':
       return [];
+    default:
+      throw new Error('Unrecognised node type: ', current.type);
   }
 };
 
