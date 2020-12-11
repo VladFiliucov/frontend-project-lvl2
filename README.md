@@ -13,7 +13,7 @@ Make sure you are running on node 14.
 ```
 git clone git@github.com:VladFiliucov/frontend-project-lvl2.git
 cd frontend-project-lvl2
-npm link
+make install
 ```
 
 ## Usage:

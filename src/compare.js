@@ -3,7 +3,7 @@ import _ from 'lodash';
 const compare = (beforeConfig, afterConfig) => {
   const allKeys = _.union(Object.keys(beforeConfig), Object.keys(afterConfig));
 
-  const nodes = allKeys.map(key => {
+  const nodes = allKeys.map((key) => {
     if (!_.has(afterConfig, key)) {
       return {
         key,

@@ -1,10 +1,6 @@
 extends:
   - airbnb-base
-  - plugin:prettier/recommended
   - plugin:jest/recommended
-
-plugins:
-  - prettier
 
 env:
   node: true
@@ -12,4 +8,3 @@ env:
 rules:
   no-console: 0
   import/extensions: 0
-  prettier/prettier: error
