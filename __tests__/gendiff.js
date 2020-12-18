@@ -12,26 +12,20 @@ const getFixturePath = (filename) => (
 const getFixtureContent = (filename) => readFileSync(path.resolve([...FIXTURES_PATH, filename].join('/')), 'utf8');
 
 const FILE_EXTENSIONS = ['json', 'yml'];
-const SUPPORTED_FORMATS = ['Stylish', 'Plain', 'JSON'];
 
-const formatsWithExtensions = FILE_EXTENSIONS.flatMap((extension) => (
-  SUPPORTED_FORMATS.map((format) => [format, extension])
-));
-
-const formattedDiffs = {};
-
-beforeAll(() => {
-  SUPPORTED_FORMATS.forEach((format) => {
-    formattedDiffs[format] = _.trim(getFixtureContent(`formatted${format}Diff`));
-  });
-});
+const formattedDiffs = {
+  stylish: _.trim(getFixtureContent('formattedStylishDiff')),
+  plain: _.trim(getFixtureContent('formattedPlainDiff')),
+  json: _.trim(getFixtureContent('formattedJSONDiff')),
+};
 
 describe('gendiff', () => {
-  test.each(formatsWithExtensions)('format %s and extension %s', (format, extension) => {
+  test.each(FILE_EXTENSIONS)('works with %s files', (extension) => {
     const beforeConfPath = getFixturePath(`confBefore.${extension}`);
     const afterConfPath = getFixturePath(`confAfter.${extension}`);
-    const formattedDiff = formattedDiffs[format];
 
-    expect(gendiff(beforeConfPath, afterConfPath, format.toLowerCase())).toBe(formattedDiff);
+    expect(gendiff(beforeConfPath, afterConfPath)).toBe(formattedDiffs.stylish);
+    expect(gendiff(beforeConfPath, afterConfPath, 'plain')).toBe(formattedDiffs.plain);
+    expect(gendiff(beforeConfPath, afterConfPath, 'json')).toBe(formattedDiffs.json);
   });
 });
