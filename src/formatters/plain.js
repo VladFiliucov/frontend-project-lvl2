@@ -20,9 +20,7 @@ const getChangelog = (current, nameAcc = []) => {
         current.removedData,
       )} to ${dataFormatter(current.addedData)}`;
     case 'parent':
-      return _.compact(
-        current.children.map((child) => getChangelog(child, [...nameAcc, current.key])),
-      );
+      return current.children.flatMap((child) => getChangelog(child, [...nameAcc, current.key]));
     case 'unmodified':
       return [];
     default:
@@ -30,8 +28,4 @@ const getChangelog = (current, nameAcc = []) => {
   }
 };
 
-export default (diffEntries) => {
-  const modificationMessages = diffEntries.map((node) => getChangelog(node));
-
-  return _.flattenDeep(modificationMessages).join('\n');
-};
+export default (diffEntries) => diffEntries.flatMap((node) => getChangelog(node)).join('\n');
