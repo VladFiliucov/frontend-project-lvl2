@@ -44,7 +44,7 @@ const getChangelog = (node, depth) => {
 };
 
 export default (diffEntries) => {
-  const logLines = diffEntries.flatMap((node) => getChangelog(node, 1)).join('\n');
+  const logLines = diffEntries.map((node) => getChangelog(node, 1)).join('\n');
 
   return ['{', logLines, '}'].join('\n');
 };
