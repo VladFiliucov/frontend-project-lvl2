@@ -5,11 +5,11 @@ import gendiff from '../src/index.js';
 
 const FIXTURES_PATH = ['__tests__', '__fixtures__'];
 
-const getFixturePath = (filename, options = { pathToFixtures: FIXTURES_PATH }) => (
-  path.join(process.cwd(), ...options.pathToFixtures, filename)
+const getFixturePath = (filename) => (
+  path.join(process.cwd(), ...FIXTURES_PATH, filename)
 );
 
-const getFixtureContent = (filename, options = { pathToFixtures: FIXTURES_PATH }) => readFileSync(path.resolve([...options.pathToFixtures, filename].join('/')), 'utf8');
+const getFixtureContent = (filename) => readFileSync(path.resolve([...FIXTURES_PATH, filename].join('/')), 'utf8');
 
 const FILE_EXTENSIONS = ['json', 'yml'];
 const SUPPORTED_FORMATS = ['Stylish', 'Plain', 'JSON'];
