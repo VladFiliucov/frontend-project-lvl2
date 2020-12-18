@@ -7,8 +7,8 @@ const dataFormatter = (data) => {
   return data;
 };
 
-const getChangelog = (current, nameAcc = []) => {
-  const keyName = [...nameAcc, current.key].join('.');
+const getChangelog = (current, namesAcc = []) => {
+  const keyName = [...namesAcc, current.key].join('.');
 
   switch (current.type) {
     case 'deleted':
@@ -20,7 +20,7 @@ const getChangelog = (current, nameAcc = []) => {
         current.removedData,
       )} to ${dataFormatter(current.addedData)}`;
     case 'parent':
-      return current.children.flatMap((child) => getChangelog(child, [...nameAcc, current.key]));
+      return current.children.flatMap((child) => getChangelog(child, [...namesAcc, current.key]));
     case 'unmodified':
       return [];
     default:
