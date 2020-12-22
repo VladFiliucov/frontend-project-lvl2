@@ -9,7 +9,7 @@ const getFixturePath = (filename) => (
   path.join(process.cwd(), ...FIXTURES_PATH, filename)
 );
 
-const getFixtureContent = (filename) => readFileSync(path.resolve([...FIXTURES_PATH, filename].join('/')), 'utf8');
+const getFixtureContent = (filename) => readFileSync(path.resolve(path.join(...[...FIXTURES_PATH, filename])), 'utf8');
 
 const FILE_EXTENSIONS = ['json', 'yml'];
 
