@@ -1,8 +1,7 @@
 import stylish from './stylish.js';
 import plain from './plain.js';
-import json from './json.js';
 
-const FORMATTERS = { stylish, plain, json };
+const FORMATTERS = { stylish, plain, json: (diffEntries) => JSON.stringify(diffEntries) };
 
 export default (format, rawData) => {
   const formatter = FORMATTERS[format];
