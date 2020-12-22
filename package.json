@@ -1,5 +1,5 @@
 {
-  "name": "gendiff",
+  "name": "@VladFiliucov/gendiff",
   "type": "module",
   "version": "1.0.0",
   "description": "CLI tool for comparing config files",
