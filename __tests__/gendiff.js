@@ -1,15 +1,17 @@
-import path from 'path';
+import { join, dirname } from 'path';
 import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
 import _ from 'lodash';
 import gendiff from '../src/index.js';
 
-const FIXTURES_PATH = ['__tests__', '__fixtures__'];
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => (
-  path.join(process.cwd(), ...FIXTURES_PATH, filename)
+  join(__dirname, '__fixtures__', filename)
 );
 
-const getFixtureContent = (filename) => readFileSync(path.resolve(path.join(...[...FIXTURES_PATH, filename])), 'utf8');
+const getFixtureContent = (filename) => readFileSync(join(__dirname, '__fixtures__', filename));
 
 const FILE_EXTENSIONS = ['json', 'yml'];
 
