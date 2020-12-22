@@ -7,7 +7,7 @@ const dataFormatter = (data) => {
   return data;
 };
 
-const getChangelog = (current, namesAcc = []) => {
+const formatLine = (current, namesAcc = []) => {
   const keyName = [...namesAcc, current.key].join('.');
 
   switch (current.type) {
@@ -20,7 +20,7 @@ const getChangelog = (current, namesAcc = []) => {
         current.removedData,
       )} to ${dataFormatter(current.addedData)}`;
     case 'parent':
-      return current.children.flatMap((child) => getChangelog(child, [...namesAcc, current.key]));
+      return current.children.flatMap((child) => formatLine(child, [...namesAcc, current.key]));
     case 'unmodified':
       return [];
     default:
@@ -28,4 +28,4 @@ const getChangelog = (current, namesAcc = []) => {
   }
 };
 
-export default (diffEntries) => diffEntries.flatMap((node) => getChangelog(node)).join('\n');
+export default (diffEntries) => diffEntries.flatMap((node) => formatLine(node)).join('\n');
