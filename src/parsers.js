@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import yaml from 'js-yaml';
 
 const PARSERS = {
@@ -7,9 +8,7 @@ const PARSERS = {
 };
 
 const parse = (format, rawContent) => {
-  const parser = PARSERS[format];
-
-  if (parser) return parser(rawContent);
+  if (_.has(PARSERS, format)) return PARSERS[format](rawContent);
 
   throw new Error(
     `Format ${format} is not supported. Supported formats are ${Object.keys(PARSERS).join(', ')}`,
