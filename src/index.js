@@ -8,8 +8,8 @@ export default (filepath1, filepath2, format = 'stylish') => {
   const beforeConfigFormat = path.extname(filepath1).slice(1);
   const afterConfigFormat = path.extname(filepath1).slice(1);
 
-  const beforeConfigContent = readFileSync(path.resolve(filepath1), 'utf8');
-  const afterConfigContent = readFileSync(path.resolve(filepath2), 'utf8');
+  const beforeConfigContent = readFileSync(path.resolve(process.cwd(), filepath1), 'utf8');
+  const afterConfigContent = readFileSync(path.resolve(process.cwd(), filepath2), 'utf8');
 
   const beforeConfig = parse(beforeConfigFormat, beforeConfigContent);
   const afterConfig = parse(afterConfigFormat, afterConfigContent);
