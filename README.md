@@ -14,6 +14,9 @@ Make sure you are running on node 14.
 git clone git@github.com:VladFiliucov/frontend-project-lvl2.git
 cd frontend-project-lvl2
 make install
+
+# And to install globaly after
+make install_global
 ```
 
 ## Usage:
